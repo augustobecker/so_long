@@ -21,20 +21,20 @@ int check_map(t_map *map)
 	while(i <= map->nbr_lines)
 	{
 		if (ft_strlen(map->line[i]) != map->line_len)
-			error_message("The Map must be rectangular!");
+			error_msg("The Map must be rectangular!");
 		if (map->line[i][0] != WALL || map->line[i][map->line_len - 1] != WALL)
-			error_message("The Map must be surrounded by walls! Missing vertical wall");
+			error_msg("The Map must be surrounded by walls! Missing vertical wall");
 		i++;
 	}
 	i = 0;
 	while (map->line[0][i])
 	{
 		if (map->line[0][i] != WALL || map->line[map->nbr_lines][i] != WALL)
-			error_message("The Map must be surrounded by walls! Missing horizontal wall");
+			error_msg("The Map must be surrounded by walls! Missing horizontal wall");
 		i++;
 	}
 	if (map->nbr_lines == map->line_len)
-		error_message("The Map must be rectangular!");
+		error_msg("Squared Map. The Map must be rectangular!");
 	are_mapparameters_present(map);
 	return (1);
 }
