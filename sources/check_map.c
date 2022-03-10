@@ -34,7 +34,7 @@ int check_map(t_map *map)
 		i++;
 	}
 	if (map->nbr_lines == map->line_len)
-		error_msg("Squared Map. The Map must be rectangular!");
+		error_msg("Square Map. The Map must be rectangular!");
 	are_mapparameters_present(map);
 	return (1);
 }
