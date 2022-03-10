@@ -6,7 +6,7 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 23:16:08 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/03/09 23:16:09 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/03/10 02:16:09 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,10 @@ int init_map(t_map *map, char *argv)
 	i = 0;
 	map->fd = open(argv, O_RDONLY);
 	if (map->fd == -1)
-		return (ERROR);
+		error_msg("The Map couldn't be opened. Invalid fd");
 	read_str = ft_strdup(get_next_line(map->fd));
 	if (!read_str)
-		return (ERROR);
+		error_msg("Allocation failed");
 	temporary = ft_strdup("");
 	while (read_str)
 	{
