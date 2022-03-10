@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-int are_mapparameters_present(t_map *map)
+void are_mapparameters_present(t_map *map)
 {
 	int coin;
 	int exit;
@@ -27,14 +27,13 @@ int are_mapparameters_present(t_map *map)
 		exit += ft_count_occurrences(map->line[i], MAP_EXIT);
 		position += ft_count_occurrences(map->line[i], START_POS);
 		if (coin && exit && position)
-			return (1);
+			break ;
 		i++;
 	}
 	if (!coin)
-		return (error_msg("There are no collectibles"));
+		error_msg("There are no collectibles");
 	if (!exit)
-		return (error_msg("There are no Exit"));
+		error_msg("There are no Exit");
 	if (!position)
-		return (error_msg("Invalid player quantity"));
-	return (1);
+		error_msg("Invalid player quantity");
 }
