@@ -6,14 +6,14 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 23:17:55 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/03/10 02:18:17 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/03/18 19:51:17 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/libft.h"
 #include "../header/so_long.h"
 
-int check_map(t_map *map)
+void check_map(t_map *map, t_game *game)
 {
 	int 	i;
 
@@ -35,6 +35,5 @@ int check_map(t_map *map)
 	}
 	if (map->nbr_lines == map->line_len)
 		error_msg("Square Map. The Map must be rectangular!");
-	are_mapparameters_present(map);
-	return (1);
+	check_map_parameters(map, game);
 }
