@@ -37,6 +37,9 @@ to any project where it's specified. These are some of them:
   Its repository is available at https://github.com/42School/norminette.
     
 <h2 align="center" id="how-does-it-work"> How does it work? </h2>
+
+<h2 align="center" id="how-do-i-test-it"> How do I test it? </h2>  
+  
 <h2 align="center" id="author"> Author </h2>
 <div>
     <img height="180em" src="https://user-images.githubusercontent.com/81205527/152089472-0aa06bd9-d882-4c83-adfc-8230d1e958c1.png">
