@@ -6,14 +6,14 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 23:16:08 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/03/10 02:16:09 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/03/18 19:56:09 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/libft.h"
 #include "../header/so_long.h"
 
-int init_map(t_map *map, char *argv)
+void init_map(t_map *map, char *argv)
 {
 	char 	*read_str;
 	char	*temporary;
@@ -35,5 +35,4 @@ int init_map(t_map *map, char *argv)
 	map->line = ft_split(temporary, '\n');
 	map->nbr_lines = ft_count_occurrences(temporary, '\n');
 	map->line_len = ft_strlen(map->line[0]);
-	return (1);
 }
