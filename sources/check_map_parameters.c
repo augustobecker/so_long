@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   are_mapparameters_present.c                        :+:      :+:    :+:   */
+/*   check_map_parameters.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -13,7 +13,7 @@
 #include "../header/libft.h"
 #include "../header/so_long.h"
 
-void	are_mapparameters_present(t_map *map, t_game *game)
+void	check_map_parameters(t_map *map, t_game *game)
 {
 	int	i;
 
@@ -23,16 +23,16 @@ void	are_mapparameters_present(t_map *map, t_game *game)
 	game->start_pos = 0;
 	while (i <= map->nbr_lines)
 	{
-		if (!are_mapparamenters(map->line[i]))
+		if (check_for_invalid_map_parameters(map->line[i]) == true)
 			error_msg("Not expected map parameter");
 		game->coin += ft_count_occurrences(map->line[i], COIN);
 		game->map_exit += ft_count_occurrences(map->line[i], MAP_EXIT);
 		game->start_pos += ft_count_occurrences(map->line[i], START_POS);
 		i++;
 	}
-	if (!game->coin)
+	if (game->coin == 0)
 		error_msg("There are no collectibles");
-	if (!game->map_exit)
+	if (game->map_exit == 0)
 		error_msg("There are no Exit");
 	if (game->start_pos != 1)
 		error_msg("Invalid player quantity");
