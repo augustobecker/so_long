@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   are_mapparamenters.c                               :+:      :+:    :+:   */
+/*   check_for_invalid_map_parameters.c                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-int are_mapparamenters(char *line)
+t_bool check_for_invalid_map_parameters(char *line)
 {
 	int parameter;
 
@@ -24,7 +24,7 @@ int are_mapparamenters(char *line)
 			|| (line[parameter] == START_POS))
 			parameter++;
 		else
-			return (0);
+			return (true);
 	}
-	return (1);
+	return (false);
 }
