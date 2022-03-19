@@ -23,7 +23,7 @@ void	check_map_parameters(t_map *map, t_game *game)
 	game->start_pos = 0;
 	while (i <= map->nbr_lines)
 	{
-		if (check_for_invalid_map_parameters(map->line[i]) == true)
+		if (check_for_invalid_map_parameters(map->line[i]) == TRUE)
 			error_msg("Not expected map parameter");
 		game->coin += ft_count_occurrences(map->line[i], COIN);
 		game->map_exit += ft_count_occurrences(map->line[i], MAP_EXIT);
