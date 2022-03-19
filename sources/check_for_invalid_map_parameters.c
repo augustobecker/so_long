@@ -24,7 +24,7 @@ t_bool check_for_invalid_map_parameters(char *line)
 			|| (line[parameter] == START_POS))
 			parameter++;
 		else
-			return (true);
+			return (TRUE);
 	}
-	return (false);
+	return (FALSE);
 }
