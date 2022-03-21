@@ -33,7 +33,7 @@ void init_map(t_game *game, char *argv)
 		temporary = ft_strjoin(temporary, read_str);
 		read_str = get_next_line(map_fd);
 	}
-	map->line = ft_split(temporary, '\n');
-	map->nbr_lines = ft_count_occurrences(temporary, '\n');
-	map->line_len = ft_strlen(map->line[0]);
+	game->map = ft_split(temporary, '\n');
+	game->map_nbr_lines = ft_count_occurrences(temporary, '\n');
+	game->map_line_len = ft_strlen(game->map[0]);
 }
