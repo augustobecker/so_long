@@ -13,18 +13,18 @@
 #include "../header/libft.h"
 #include "../header/so_long.h"
 
-void	check_map_parameters(t_map *map, t_game *game)
+void	check_map_parameters(t_game *game)
 {
 	int	i;
 
 	i = 0;
-	while (i <= map->nbr_lines)
+	while (i <= game->map_nbr_lines)
 	{
-		if (check_for_invalid_map_parameters(map->line[i]) == TRUE)
+		if (check_for_invalid_map_parameters(game->map[i]) == TRUE)
 			error_msg("Not expected map parameter");
-		game->coin += ft_count_occurrences(map->line[i], COIN);
-		game->map_exit += ft_count_occurrences(map->line[i], MAP_EXIT);
-		game->start_pos += ft_count_occurrences(map->line[i], START_POS);
+		game->coin += ft_count_occurrences(game->map[i], COIN);
+		game->map_exit += ft_count_occurrences(game->map[i], MAP_EXIT);
+		game->start_pos += ft_count_occurrences(game->map[i], START_POS);
 		i++;
 	}
 	if (game->coin == 0)
