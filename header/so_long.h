@@ -6,15 +6,18 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 13:53:38 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/03/22 19:26:58 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/03/23 12:26:58 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
-# define SO_LONG_H
+#	define SO_LONG_H
 
-#include <mlx.h>
-#include "libft.h"
+#	include <mlx.h>
+#	include "libft.h"
+#	include <stdlib.h>
+#	include <unistd.h>
+#	include <fcntl.h>
 
 typedef enum e_bool
 {
