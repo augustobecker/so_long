@@ -6,7 +6,7 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 18:53:54 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/03/25 10:50:55 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/03/25 11:27:55 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_bool check_for_invalid_map_parameters(char *line)
 	int parameter;
 
 	parameter = 0;
-	while ((line[parameter]) && ft_isprint(line[parameter]) == FALSE)
+	while ((line[parameter]) && ft_isprint(line[parameter]) == TRUE)
 	{
 		if ((line[parameter] == WALL) 
 			|| (line[parameter] == EMPTY_SPC)
