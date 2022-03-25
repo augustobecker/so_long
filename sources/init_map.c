@@ -6,7 +6,7 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 23:16:08 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/03/22 11:56:09 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/03/25 11:58:09 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,6 @@ void init_map(t_game *game, char *argv)
 	}
 	game->map.line = ft_split(temporary, '\n');
 	game->map.nbr_lines = ft_count_occurrences(temporary, '\n');
+	game->map.nbr_lines++;
 	game->map.line_len = ft_strlen(game->map[0]);
 }
