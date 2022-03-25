@@ -18,10 +18,10 @@ void check_command_line_arguments(int argc, char **argv)
 	int map_parameter_len;
 
 	if (argc > 2)
-		error_msg("Too many arguments (It should be only two)");
+		error_msg("Too many arguments (It should be only two).");
 	if (argc < 2)
-		error_msg("The Map file is missing");
+		error_msg("The Map file is missing.");
 	map_parameter_len = ft_strlen(argv[1]);
 	if (!ft_strnstr(&argv[1][map_parameter_len - 4], ".ber", 4))
-		error_msg("Map file extention is wrong (It should be .ber)");
+		error_msg("Map file extention is wrong (It should be .ber).");
 }
