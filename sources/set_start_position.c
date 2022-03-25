@@ -6,7 +6,7 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/23 13:12:44 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/03/23 13:22:09 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/03/25 15:13:09 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,6 @@ void set_start_position(t_game *game, char *line, int y)
 	x = 0;
 	while(line[x] != START_POS)
 		x++;
-	game->map.position.x = x;
-	game->map.position.y = y;
+	game->map.player.x = x;
+	game->map.player.y = y;
 }
