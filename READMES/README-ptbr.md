@@ -1,4 +1,4 @@
-<h1 align="center"> SoLong - @42sp </h1>
+<h1 align="center"> so_long - @42sp </h1>
 
 <p align="center">:information_source: Um pequeno jogo 2D usando a Biblioteca Gráfica MiniLibX - Texturas, sprites e tiles incluídos. </p>
 
@@ -6,13 +6,13 @@
 <p align="center"><a href="https://github.com/augustobecker/SoLong/blob/main/README.md" target="_blank"><img src="https://img.shields.io/badge/available%20in-EN-blue"></a></p>
 
 ## Index
-* [O que é SoLong?](#o-que-e-solong)
+* [O que é so_long?](#o-que-e-so_long)
 * [Requisitos](#requisitos)
 * [Como funciona?](#como-funciona)
 * [Como eu testo?](#como-eu-testo)
 * [Autor](#autor)
 
-<h2 align="center" id="o-que-e-solong"> O que é SoLong? </h2>
+<h2 align="center" id="o-que-e-so_long"> O que é so_long? </h2>
 
 The fifth project at 42 programming school.
 <h2 align="center" id="requisitos"> Requisitos </h2>
@@ -35,7 +35,10 @@ A Norma é um padrão de programação que define um conjunto de regras a seguir
   O repositório está disponível em https://github.com/42School/norminette
     
 <h2 align="center" id="como-funciona"> Como funciona? </h2>
-<h2 align="center" id="autor"> Autor </h2>
+    
+<h2 align="center" id="como-eu-testo"> Como eu testo? </h2>
+    
+ <h2 align="center" id="autor"> Autor </h2>
 <div>
     <img height="180em" src="https://user-images.githubusercontent.com/81205527/152089472-0aa06bd9-d882-4c83-adfc-8230d1e958c1.png">
     
@@ -43,7 +46,8 @@ A Norma é um padrão de programação que define um conjunto de regras a seguir
     
 :wave: Fale comigo: 
     
-  <a href = "mailto:augustobecker.dev@gmail.com"><img src="https://img.shields.io/badge/augustobecker.dev@gmail.com-D14836?style=for-the-badge&logo=gmail&logoColor=white"> </a>
-  <a href="https://www.linkedin.com/in/augusto-becker/" target="_blank"><img src="https://img.shields.io/badge/-Augusto Becker-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank"></a>
-  <a href="https://www.instagram.com/augusto.becker/" target="_blank"><img src="https://img.shields.io/badge/-augusto.becker-%23E4405F?style=for-the-badge&logo=instagram&logoColor=white" target="_blank"></a>
+  <a href="https://www.linkedin.com/in/augusto-becker/" target="_blank"><img align="center" alt="LinkedIn" height="60" src="https://user-images.githubusercontent.com/81205527/157161849-01a9df02-bf32-45be-add4-122bc40b48cf.png"></a>
+<a href="https://www.instagram.com/augusto.becker/" target="_blank"><img align="center" alt="Instagram" height="60" src="https://user-images.githubusercontent.com/81205527/157161841-19ec3ab2-2c8f-4ec0-8b9d-3cd885256098.png"></a>
+<a href = "mailto:augustobecker.dev@gmail.com"> <img align="center" alt="Gmail - augustobecker.dev@gmail.com" height="60" src="https://user-images.githubusercontent.com/81205527/157161831-eb9dffee-404b-4ffe-b0af-34671219f7fb.png"></a>
+<a href="https://discord.gg/3kxYkBRxUy" target="_blank"><img align="center" alt="Discord - beckerzz#3614" height="60" src="https://user-images.githubusercontent.com/81205527/157161820-de88dc63-61a3-4c9f-9445-07ac98bf0bc2.png"></a>
 </div>
