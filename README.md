@@ -1,4 +1,4 @@
-<h1 align="center"> SoLong - @42sp </h1>
+<h1 align="center"> so_long - @42sp </h1>
 
 <p align="center">:information_source: A small 2D Game using the MiniLibX Graphics Library - Textures, sprites and tiles included. </p>
 
@@ -6,13 +6,13 @@
 <p align="center"><a href="https://github.com/augustobecker/SoLong/blob/main/READMES/README-ptbr.md" target="_blank"><img src="https://img.shields.io/badge/dispon%C3%ADvel%20tamb%C3%A9m%20em-PT--BR-yellow"></a></p>
 
 ## Index
-* [What is SoLong?](#what-is-solong)
+* [What is so_long?](#what-is-so_long)
 * [Requirements](#requirements)
 * [How does it work?](#how-does-it-work)
 * [How do I test it?](#how-do-i-test-it)
 * [Author](#author)
 
-<h2 align="center" id="what-is-solong"> What is SoLong? </h2>
+<h2 align="center" id="what-is-so_long"> What is so_long? </h2>
 
 The fifth project at 42 programming school.
   
