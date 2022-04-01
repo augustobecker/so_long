@@ -24,226 +24,299 @@
 #include <errno.h>
 #include "Libft/libft.h"
 
-# define ERROR 		-1
+# define RED 	"\033[1;31m"
+# define GREY 	"\033[0;90m"
+# define RESET 	"\033[0m"
 
-# define WALL 		'1'
-# define EMPTY_SPC	'0'
-# define COIN 		'C'
-# define MAP_EXIT 	'E'
-# define START_POS	'P'
+# define WALL		'1'
+# define COINS  	'C'
+# define MAP_EXIT  	'E'
+# define START_POS  'P'
+# define EMPTY_SPC  '0'
 
-# define RED "\033[1;31m"
-# define GREY "\033[0;90m"
-# define RESET "\033[0m"
-
-#define WINDOW_WIDTH  600
-#define WINDOW_HEIGHT 300
-
-#define SUCESS	 	  0
-#define MLX_ERROR 	  1
-
-typedef struct s_data
+typedef enum e_bool
 {
-	void	*mlx_ptr;
-	void	*win_ptr;
-}	t_data;
+	TRUE = 1,
+	FALSE = 0
+}	t_bool;
+
+typedef struct s_position
+{
+	int	x;
+	int	y;
+}	t_positon;
+
+typedef struct s_image
+{
+	void	*xpm_ptr;
+	int		width;
+	int		height;
+} t_image;
 
 typedef struct s_map
 {
-	int		fd;
-	int		nbr_lines;
-	int		line_len;
-	char	**line;
+	char		**line;
+	int			nbr_lines;
+	int			line_len;
+	int 		coins;
+	int 		exit;
+	int			nbr_players;
+	t_positon	player;
 }	t_map;
 
 typedef struct s_game
 {
-	int coin;
-	int map_exit;
-	int start_pos;
+	void		*mlx_ptr;
+	void		*win_ptr;
+	int 		movements;
+	t_map		map;
+	t_image		wall;
+	t_image		player_one;
+	t_image		floor;
+	t_image		coins;
+	t_image		exit;
 }	t_game;
 
-typedef struct s_image
-{
-	void	*img_ptr;
-} t_image;
 
-int handle_no_event(void *data)
+static int handle_no_event(void *game)
 {
 	return (0);
 }
 
-int handle_input(int keysym, t_data *data)
+static int handle_input(int keysym, t_game *game)
 {
 	if ( keysym == XK_Escape)
-		mlx_destroy_window(data->mlx_ptr, data->win_ptr);
+		mlx_destroy_window(game->mlx_ptr, game->win_ptr);
 	return (0);
 }
 
-int	handle_keypress(int keysym, t_data *data)
-{
-	if (keysym == XK_Escape)
-		mlx_destroy_window(data->mlx_ptr, data->win_ptr);
-	ft_printf("Keypress: %d\n", keysym);
-	return (0);
-}
 
-int	handle_keyrelease(int keysym, void *data)
-{
-	printf("Keyrelease: %d\n", keysym);
-	return (0);
-}
-
-int	error_msg(char *message)
+int error_msg(char *message)
 {
 	ft_printf(RED"Error\n"GREY"%s\n"RESET, message);
 	exit (EXIT_FAILURE);
 }
 
-int	are_mapparamenters(char *line)
+void init_vars(t_game *game)
+{
+	game->map.coins = 0;
+	game->map.exit = 0;
+	game->map.nbr_players = 0;
+	game->movements = 0;
+}
+
+size_t strlen_line(char *str)
+{
+	size_t	length;
+
+	length = 0;
+	while ((str[length]) && (ft_isprint(str[length]) == TRUE))
+		length++;
+	return (length);
+}
+
+void check_command_line_arguments(int argc, char **argv)
+{
+	int map_parameter_len;
+
+	if (argc > 2)
+		error_msg("Too many arguments (It should be only two).");
+	if (argc < 2)
+		error_msg("The Map file is missing");
+	map_parameter_len = ft_strlen(argv[1]);
+	if (!ft_strnstr(&argv[1][map_parameter_len - 4], ".ber", 4))
+		error_msg("Map file extention is wrong (It should be .ber).");
+}
+
+t_bool check_for_invalid_map_parameters(char *line)
 {
 	int parameter;
 
 	parameter = 0;
-	while (line[parameter])
+	while ((line[parameter]) && ft_isprint(line[parameter]) == TRUE)
 	{
 		if ((line[parameter] == WALL) 
 			|| (line[parameter] == EMPTY_SPC)
-			|| (line[parameter] == COIN) 
+			|| (line[parameter] == COINS) 
 			|| (line[parameter] == MAP_EXIT)
 			|| (line[parameter] == START_POS))
 			parameter++;
 		else
-			return (0);
+			return (TRUE);
 	}
-	return (1);
+	return (FALSE);
 }
 
-int	init_map(t_map *map, char *argv)
+void init_map(t_game *game, char *argv)
 {
 	char 	*read_str;
 	char	*temporary;
+	int		map_fd;
 	int		i;
 
 	i = 0;
-	map->fd = open(argv, O_RDONLY);
-	if (map->fd == -1)
+	map_fd = open(argv, O_RDONLY);
+	if (map_fd == -1)
 		error_msg("The Map couldn't be opened. Invalid fd");
-	read_str = ft_strdup(get_next_line(map->fd));
+	read_str = ft_strdup(get_next_line(map_fd));
 	if (!read_str)
 		error_msg("Allocation failed");
 	temporary = ft_strdup("");
 	while (read_str)
 	{
 		temporary = ft_strjoin(temporary, read_str);
-		read_str = get_next_line(map->fd);
+		read_str = get_next_line(map_fd);
 	}
-	map->line = ft_split(temporary, '\n');
-	map->nbr_lines = ft_count_occurrences(temporary, '\n');
-	map->line_len = ft_strlen(map->line[0]);
-	return (1);
+	close(map_fd);
+	game->map.line = ft_split(temporary, '\n');
+	game->map.nbr_lines = ft_count_occurrences(temporary, '\n');
+	game->map.nbr_lines++;
+	game->map.line_len = strlen_line(game->map.line[0]);
 }
 
-void	are_mapparameters_present(t_map *map, t_game *game)
+
+//CHANGE ON GITHUB
+void set_start_position(t_game *game, char *line, int y)
+{
+	int x;
+
+	x = 0;
+	while(line[x] && line[x] != START_POS)
+		x++;
+	if (line[x] == '\0')
+		return ;
+	game->map.player.x = x;
+	game->map.player.y = y;
+}
+// this function
+
+int	count_occurrences(char *str, char c)
+{
+	int	occurrences;
+	int	i;
+
+	i = 0;
+	occurrences = 0;
+	while (str[i] && ft_isprint(str[i]))
+	{
+		if (str[i] == c)
+			occurrences++;
+		i++;
+	}
+	return (occurrences);
+}
+
+
+void	check_map_parameters(t_game *game)
 {
 	int	i;
 
 	i = 0;
-	game->coin = 0;
-	game->map_exit = 0;
-	game->start_pos = 0;
-	while (i <= map->nbr_lines)
+	while (i < game->map.nbr_lines)
 	{
-		if (!are_mapparamenters(map->line[i]))
+		if (check_for_invalid_map_parameters(game->map.line[i]) == 1)
 			error_msg("Not expected map parameter");
-		game->coin += ft_count_occurrences(map->line[i], COIN);
-		game->map_exit += ft_count_occurrences(map->line[i], MAP_EXIT);
-		game->start_pos += ft_count_occurrences(map->line[i], START_POS);
+		game->map.coins += count_occurrences(game->map.line[i], COINS);
+		game->map.exit += count_occurrences(game->map.line[i], MAP_EXIT);
+		game->map.nbr_players += count_occurrences(game->map.line[i], START_POS);
+		if (game->map.nbr_players == 1)
+			set_start_position(game, game->map.line[i], i);
 		i++;
 	}
-	if (!game->coin)
-		error_msg("There are no collectibles");
-	if (!game->map_exit)
-		error_msg("There are no Exit");
-	if (game->start_pos != 1)
-		error_msg("Invalid player quantity");
+	if (game->map.coins == 0)
+		error_msg("Invalid Map. There are no collectibles!");
+	else if (game->map.exit == 0)
+		error_msg("Invalid Map. There is no Exit");
+	else if (game->map.nbr_players != 1)
+		error_msg("Invalid Map. Invalid player quantity.");
 }
 
-void	check_map(t_map *map, t_game *game)
+void check_map(t_game *game)
 {
 	int 	i;
 
 	i = 0;
-	if (map->nbr_lines == map->line_len)
-		error_msg("Square Map. The Map must be rectangular!");
-	while(i <= map->nbr_lines)
+
+	if (game->map.nbr_lines == game->map.line_len)
+		error_msg("Square Map. The Map must be rectangular!");	
+	while(i < game->map.nbr_lines)
 	{
-		if ((int) ft_strlen(map->line[i]) != map->line_len)
+		if ((int) strlen_line(game->map.line[i]) != game->map.line_len)
 			error_msg("The Map must be rectangular!");
-		if (map->line[i][0] != WALL || map->line[i][map->line_len - 1] != WALL)
-			error_msg("The Map must be surrounded by walls! Missing vertical wall");
+		if ((game->map.line[i][0] != WALL)
+			|| (game->map.line[i][game->map.line_len - 1] != WALL))
+			error_msg("The Map must be surrounded by walls! Missing vertical wall.");
 		i++;
 	}
 	i = 0;
-	while (map->line[0][i])
+	while (i < game->map.line_len)
 	{
-		if (map->line[0][i] != WALL || map->line[map->nbr_lines][i] != WALL)
-			error_msg("The Map must be surrounded by walls! Missing horizontal wall");
+		if ((game->map.line[0][i] != WALL) 
+			|| (game->map.line[game->map.nbr_lines - 1][i] != WALL))
+			error_msg("The Map must be surrounded by walls! Missing horizontal wall.");
 		i++;
 	}
-	are_mapparameters_present(map, game);
+	check_map_parameters(game);
 }
 
-void	check_arguments(int argc, char **argv)
+void print_map(t_game *game)
 {
-	int map_parameter_len;
+	int i;
+	int j;
 
-	if (argc > 2)
-		error_msg("Too many arguments");
-	if (argc < 2)
-		error_msg("Map file is missing");
-	map_parameter_len = ft_strlen(argv[1]);
-	if (!ft_strnstr(&argv[1][map_parameter_len - 4], ".ber", 4))
-		error_msg("Map file extention is wrong (It should be .ber)");
+	i = 0;
+	j = 0;
+	while (j < game->map.nbr_lines)
+	{
+		while (i < game->map.line_len)
+		{
+			if (game->map.line[j][i] == WALL)
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->wall.xpm_ptr, i * game->wall.width, j * game->wall.height);
+			if (game->map.line[j][i] == EMPTY_SPC)
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->floor.xpm_ptr, i * game->floor.width, j * game->floor.height);
+			if (game->map.line[j][i] == COINS)
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->coins.xpm_ptr, i * game->coins.width, j * game->coins.height);
+			if (game->map.line[j][i] == MAP_EXIT)
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->exit.xpm_ptr, i * game->exit.width, j * game->exit.height);
+			i++;
+		}
+		i = 0; 
+		j++;
+	}
+}
+
+void init_game(t_game *game)
+{
+	game->mlx_ptr = mlx_init();
+	if (game->mlx_ptr == NULL)
+		error_msg("Couldn't find mlx pointer.");
+	game->win_ptr = mlx_new_window(game->mlx_ptr, \
+	game->map.line_len * 32, game->map.nbr_lines * 32, "so_long");
+	if (game->win_ptr == NULL)
+		error_msg("Couldn't create the Window.");
+	game->wall.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
+	"folder/assets/images/wall.xpm", &game->wall.width, &game->wall.height);
+	game->floor.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
+	"folder/assets/images/floor.xpm", &game->floor.width, &game->floor.height);
+	game->coins.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
+	"folder/assets/images/coin-bag.xpm", &game->coins.width, &game->coins.height);
+	game->exit.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
+	"folder/assets/images/exit-ladder.xpm", &game->exit.width, &game->exit.height);
 }
 
 int	main(int argc, char **argv)
 {
-	t_map	map;
 	t_game	game;
-	t_data 	data;
-	//t_image	coin_bag;
-	int		i;
 
-	check_arguments(argc, argv);
-	init_map(&map, argv[1]);
-	check_map(&map, &game);
-	i = 0;
-	while (i < 5)
-		ft_putendl_fd(map.line[i++], 1);
-
-	data.mlx_ptr = mlx_init();
-	if (data.mlx_ptr == NULL)
-		return (MLX_ERROR);
-	data.win_ptr = mlx_new_window(data.mlx_ptr, WINDOW_WIDTH, WINDOW_HEIGHT, "so_long");
-	
-	mlx_pixel_put(data.mlx_ptr, data.win_ptr, 640/2, 360/2, 0xFFFFFF); 																			//draw a pixel
-	mlx_string_put (data.mlx_ptr, data.win_ptr, WINDOW_WIDTH/4 , WINDOW_HEIGHT/4, 0xFFFFFF, "What Muggles are only able to do accidentally:)");	//put a string on the screeen
-	mlx_string_put (data.mlx_ptr, data.win_ptr, WINDOW_WIDTH/4 , WINDOW_HEIGHT - 30, 0xFFFFFF, "42sp");											//put a string on the screeen
-
-	//coin_bag.img_ptr = mlx_new_image (data.mlx_ptr, ); //image manipulation
-	//mlx_put_image_to_window(data.mlx_ptr, data.win_ptr, coin_bag.img_ptr);
-	
-	if (data.win_ptr == NULL)
-	{
-		free(data.win_ptr);
-		return (MLX_ERROR);
-	}
-	mlx_loop_hook(data.mlx_ptr, &handle_no_event, &data);
-	mlx_key_hook(data.win_ptr, &handle_input, &data);
-	mlx_hook(data.win_ptr, KeyPress, KeyPressMask, &handle_keypress, &data);
-	mlx_hook(data.win_ptr, KeyRelease, KeyReleaseMask, &handle_keyrelease, &data);
-	mlx_loop(data.mlx_ptr); //Loop - nenhuma parte do projeto deve vir após isso - apenas o free
-	mlx_destroy_display(data.mlx_ptr);
-	free(data.mlx_ptr);
+	check_command_line_arguments(argc, argv);
+	init_vars(&game);
+	init_map(&game, argv[1]);
+	check_map(&game);
+	init_game(&game);
+	print_map(&game);
+	mlx_loop_hook(game.mlx_ptr, &handle_no_event, &game);
+	mlx_loop_hook(game.mlx_ptr, &handle_input, &game);
+	mlx_loop(game.mlx_ptr);
+	mlx_destroy_display(game.mlx_ptr);
+	free(game.mlx_ptr);
 }
