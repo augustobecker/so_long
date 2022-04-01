@@ -6,12 +6,11 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 07:08:26 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/03/18 19:48:48 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/04/01 14:08:48 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/libft.h"
-#include "../header/so_long.h"
+#include "so_long.h"
 
 void check_command_line_arguments(int argc, char **argv)
 {
