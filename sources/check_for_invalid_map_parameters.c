@@ -6,7 +6,7 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 18:53:54 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/04/01 14:27:55 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/04/02 06:27:55 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@ e_bool check_for_invalid_map_parameters(char *line)
 	while ((line[parameter]) && ft_isprint(line[parameter]) == TRUE)
 	{
 		if ((line[parameter] == WALL) 
-			|| (line[parameter] == EMPTY_SPC)
+			|| (line[parameter] == FLOOR)
 			|| (line[parameter] == COINS) 
 			|| (line[parameter] == MAP_EXIT)
-			|| (line[parameter] == START_POS))
+			|| (line[parameter] == PLAYER))
 			parameter++;
 		else
 			return (true);
