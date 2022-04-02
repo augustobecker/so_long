@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "so_long.h"
+
 void init_game(t_game *game)
 {
 	game->mlx_ptr = mlx_init();
