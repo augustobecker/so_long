@@ -6,12 +6,11 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/09 23:16:08 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/03/25 11:58:09 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/04/02 06:58:09 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/libft.h"
-#include "../header/so_long.h"
+#include "so_long.h"
 
 void init_map(t_game *game, char *argv)
 {
@@ -34,7 +33,7 @@ void init_map(t_game *game, char *argv)
 		read_str = get_next_line(map_fd);
 	}
 	game->map.line = ft_split(temporary, '\n');
-	game->map.nbr_lines = ft_count_occurrences(temporary, '\n');
-	game->map.nbr_lines++;
-	game->map.line_len = ft_strlen(game->map[0]);
+	game->map.lines = ft_count_occurrences(temporary, '\n');
+	game->map.lines++;
+	game->map.columns = strlen_line(game->map[0]);
 }
