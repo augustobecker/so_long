@@ -53,7 +53,7 @@ typedef struct s_map
 	int		columns;
 	int 		coins;
 	int 		exit;
-	int		nbr_players;
+	int		players;
 	t_positon	player;
 }	t_map;
 
