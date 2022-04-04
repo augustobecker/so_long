@@ -6,7 +6,7 @@
 #    By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/01 14:28:59 by acesar-l          #+#    #+#              #
-#    Updated: 2022/04/01 18:58:59 by acesar-l         ###   ########.fr        #
+#    Updated: 2022/04/04 20:08:59 by acesar-l         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ STANDARD_FLAGS	= -Wall -Wextra -Werror
 MINILIBX_FLAGS	= -lmlx -lXext -lX11 -lm 
 
 LIBFT 		= libraries/Libft/libft.a
+LIBFT_PATH	= libraries/Libft
 
 SRC_DIR 	= ./sources
 OBJ_DIR 	= ./objects
@@ -43,7 +44,7 @@ SOURCES		= 	sources/so_long.c				\
 OBJECTS		= $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 
 ${LIBFT}:
-		make bonus -C libft
+		make bonus -C ${LIBFT_PATH}
 		@echo
 
 all:		${NAME}
@@ -55,14 +56,14 @@ ${NAME}:	${LIBFT} $(OBJ_DIR) ${OBJECTS}
 		@echo
 
 clean:
-		make clean -C libft
+		make clean -C ${LIBFT_PATH}
 		@echo
 		@echo "$(NAME): $(RED)object files were deleted$(RESET)"
 		${REMOVE} ${OBJECTS}
 		@echo
 
 fclean:	
-		make fclean -C libft
+		make fclean -C ${LIBFT_PATH}
 		@echo "$(NAME): $(RED)object files were deleted$(RESET)"
 		${REMOVE} ${OBJ_DIR}
 		@echo
