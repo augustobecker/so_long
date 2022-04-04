@@ -6,7 +6,7 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 13:53:38 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/04/02 07:26:58 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/04/04 11:36:58 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@
 # define MAP_EXIT  	'E'
 # define PLAYER 	'P'
 
-enum e_bool
+typedef enum e_bool
 {
-	true,
-	false
-};
+	false,
+	true
+}	t_bool;
 
 typedef struct s_position
 {
@@ -44,7 +44,7 @@ typedef struct s_image
 	void	*xpm_ptr;
 	int	width;
 	int	height;
-} t_image;
+}	t_image;
 
 typedef struct s_map
 {
