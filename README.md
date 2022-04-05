@@ -10,6 +10,7 @@
 * [Requirements](#requirements)
 * [How does it work?](#how-does-it-work)
 * [How do I test it?](#how-do-i-test-it)
+* [42 Cursus](#42-cursus)
 * [Author](#author)
 
 <h2 align="center" id="what-is-so_long"> What is so_long? </h2>
@@ -39,7 +40,23 @@ to any project where it's specified. These are some of them:
 <h2 align="center" id="how-does-it-work"> How does it work? </h2>
 
 <h2 align="center" id="how-do-i-test-it"> How do I test it? </h2>  
-  
+
+<h2 align="center" id="42-cursus"> 42 Cursus </h2>
+	
+42 is a global education initiative that proposes a new way of learning technology: no teachers, no classrooms,
+students learning from their fellow students (peer to peer learning),
+with a methodology that develops both computing and life skills.
+Not to mention that it's completely free of charge and open to all with no prerequisites.
+
+Admissions at 42 are unlike other colleges. We use a merit-based admission process.
+The final step of the admission is the Piscine - This is part of the admissions process and 
+requires 4 weeks of intensive and immersive coding. No prior coding experience is necessary at all.
+	
+You can check more about the admission process on the 42sp website: https://www.42sp.org.br or on my github repository: <a href="">42 Piscine</a>
+
+To see other projects developed by me at 42, click here: <a href="https://github.com/augustobecker/42cursus">42 Cursus </a>
+	
+ 
 <h2 align="center" id="author"> Author </h2>
 <div>
     <img height="180em" src="https://user-images.githubusercontent.com/81205527/152089472-0aa06bd9-d882-4c83-adfc-8230d1e958c1.png">
