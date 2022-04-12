@@ -15,7 +15,11 @@
 
 <h2 align="center" id="o-que-e-so_long"> O que é so_long? </h2>
 
-The fifth project at 42 programming school.
+O quinto projeto na escola de programação 42. Esse é o primeiro projeto gráfico que fazemos e podemos escolher entre 3 opções(FdF, Fractol e so_long),
+que abordaram áreas diferentes mas são todos projetos gráficos. O so_long consiste em um jogo top-down, que codificamos do 0,
+com auxilio da biblioteca MiniLibx. Envolve uma série de validações do mapa que recebemos, checagens para evitar leaks de memória,
+lidar com a engenharia do jogo em si, as sprites e os mapas.
+    
 <h2 align="center" id="requisitos"> Requisitos </h2>
 
 <p  align="center"> :warning: O projeto deve estar de acordo com a <a href="https://github.com/42School/norminette/blob/master/pdf/pt_br.norm.pdf" target="blank">Norma</a> </p>
@@ -35,7 +39,7 @@ A Norma é um padrão de programação que define um conjunto de regras a seguir
   
   O repositório está disponível em https://github.com/42School/norminette
     
-<h2 align="center" id="como-funciona"> Como funciona? </h2>
+<h2 align="center" id="como-funciona"> Como funciona? </h2>    
     
 <h2 align="center" id="como-eu-testo"> Como eu testo? </h2>
     
