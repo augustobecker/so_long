@@ -42,6 +42,37 @@ A Norma é um padrão de programação que define um conjunto de regras a seguir
 <h2 align="center" id="como-funciona"> Como funciona? </h2>    
 
     
+Você só vai conseguir jogar uma vez que tenha instalado os recursos da <a href="https://github.com/42Paris/minilibx-linux">MiniLibx</a> ou que esteja usando
+uma das máquinas da 42.
+    
+<h3 align="center"> Mapa </h3>   
+Qualquer mapa que você passar pode servir de input para o jogo, isso se respeitar as regras abaixo:
+
+O mapa precisa ser um arquivo .ber
+
+E só pode conter os seguintes caracteres:
+    
+| CARACTERE |	OBJETO   |
+| --------- | ---------- |
+| 1         |   Parede   |
+| C	        | Coletáveis |
+| E	        |    Saída   |
+| P         |   Jogador  |      
+| 0         |   Piso     |    
+    
+O mapa deve ser retangular e cercado de paredes '1'.
+
+Deve conter pelo menos uma saída 'E', um coletável 'C' e apenas um jogador 'P'.
+    
+Pode conferir alguns exemplos na pasta /assets/maps desse projeto:
+    
+![image](https://user-images.githubusercontent.com/81205527/163024984-1ff511c1-17d2-4eef-8d97-90cc8a884c73.png)    
+
+<h3 align="center"> Controles </h3>   
+    
+Use WASD ou as setas para se mover. Você só pode se mover um bloco por vez, após pegar todos os sacos de dinheiro, a tampa do bueiro se abre e você pode escapar pela escada. Além disso você pode conferir o número de movimentos que precisou para completar o jogo.
+
+Pode fechar o jogo clicando no X no topo direito da janela, ou ainda pressionando Q ou Esc.
   
 <h2 align="center" id="como-eu-testo"> Como eu testo? </h2>
 
