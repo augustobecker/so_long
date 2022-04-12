@@ -15,7 +15,7 @@
 
 <h2 align="center" id="o-que-e-so_long"> O que é so_long? </h2>
 
-O quinto projeto na escola de programação 42. Esse é o primeiro projeto gráfico que fazemos e podemos escolher entre 3 opções(FdF, Fractol e so_long),
+O quinto projeto na escola de programação 42. Esse é o primeiro projeto gráfico que fazemos e podemos escolher entre 3 opções (FdF, Fractol e so_long),
 que abordaram áreas diferentes mas são todos projetos gráficos. O so_long consiste em um jogo top-down, que codificamos do 0,
 com auxilio da biblioteca MiniLibx. Envolve uma série de validações do mapa que recebemos, checagens para evitar leaks de memória,
 lidar com a engenharia do jogo em si, as sprites e os mapas.
@@ -40,8 +40,46 @@ A Norma é um padrão de programação que define um conjunto de regras a seguir
   O repositório está disponível em https://github.com/42School/norminette
     
 <h2 align="center" id="como-funciona"> Como funciona? </h2>    
+
     
+  
 <h2 align="center" id="como-eu-testo"> Como eu testo? </h2>
+
+Para testar o funcionamento do jogo em si recomendo que jogue com alguns mapas diferentes e tente fazer coisas como:
+    
+Caminhar rumo à um muro e ver se é barrado.
+    
+Ir para a saída do mapa sem ter coletado todos os itens.
+
+Percorrer o mesmo caminho pelo menos uma vez.
+    
+Testar se consegue se movimentar tanto com as setas quanto com as teclas WASD.
+    
+Conferir se a janela fecha quando clica no X, também pressionando a tecla Q e Esc.
+  
+Para testar as validações de mapa, que exige modificar alguns mapas, testar com uma extensão inválida e afins eu resolvi criar um tester.
+Não tinha encontrado nenhum outro até o momento.
+
+Para testar o código desse repositório:
+    
+Clone o repositório e entre nele:
+    
+    git clone https://github.com/augustobecker/so_long so_long
+  
+    cd so_long/
+
+Agora, clone o so_long Tester do @augustobecker:
+    
+    git clone https://github.com/augustobecker/so_long_tester so_long_tester
+ 
+Entre na pasta do Tester e rode com make:
+    
+    cd so_long_tester
+    make
+
+Se você fez tudo corretamente, deve ver algo como isso:
+
+![image](https://user-images.githubusercontent.com/81205527/160744567-c64eb579-5528-4272-b4a6-579085aaebdf.png)    
     
 <h2 align="center" id="42-cursus"> 42 Cursus </h2>
     
