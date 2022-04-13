@@ -6,7 +6,7 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 21:16:12 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/04/12 01:44:17 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/04/12 15:43:47 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,11 +39,6 @@
 # define KEY_A		97
 # define KEY_S		115
 # define KEY_D		100
-
-# define KEY_W_u	87
-# define KEY_A_u	65
-# define KEY_S_u	83
-# define KEY_D_u	68
 
 # define KEY_UP  	65362
 # define KEY_LEFT  	65361
@@ -90,10 +85,13 @@ typedef struct s_game
 	int 		movements;
 	t_map		map;
 	t_image		wall;
-	t_image		player;
 	t_image		floor;
 	t_image		coins;
-	t_image		exit;
+	t_image		exit_open;
+	t_image		exit_closed;
+	t_image		player_right;
+	t_image		player_left;
+	t_bool		plyr_left;
 }	t_game;
 
 
@@ -118,13 +116,42 @@ void render_player_move(t_game *game, int line, int column)
 	mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
 	game->floor.xpm_ptr, game->map.player.x * game->floor.width, \
 	 game->map.player.y * game->floor.height);
-	mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
-	game->player.xpm_ptr, column * game->player.width, \
-	line * game->player.height);
+	if (game->plyr_left == false)
+	{
+		mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
+		game->player_right.xpm_ptr, column * game->player_right.width, \
+		line * game->player_right.height);
+	}
+	else
+	{
+		mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
+		game->player_left.xpm_ptr, column * game->player_left.width, \
+		line * game->player_left.height);
+	}
 	game->map.player.x = column;
 	game->map.player.y = line;
 	game->movements++;
 	ft_printf("Movements: %d\n", game->movements);
+}
+
+void print_open_exit(t_game *game)
+{
+	int i;
+	int j;
+
+	i = 0;
+	j = 0;
+	while (j < game->map.lines)
+	{
+		while (i < game->map.columns)
+		{
+			if (game->map.line[j][i] == MAP_EXIT)
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->exit_open.xpm_ptr, i * game->exit_open.width, j * game->exit_open.height);
+			i++;
+		}
+		i = 0; 
+		j++;
+	}
 }
 
 void player_move(t_game *game, int line, int column)
@@ -138,12 +165,13 @@ void player_move(t_game *game, int line, int column)
 	{
 		render_player_move(game, line, column);
 		game->map.coins--;
-		return ;
+		if (game->map.coins == 0)
+			print_open_exit(game);
 	}
-	if (game->map.line[line][column] == MAP_EXIT && game->map.coins == 0)
+	if ((game->map.line[line][column] == MAP_EXIT) && (game->map.coins == 0))
 	{
-		ft_printf(GREEN"YOU WON\n"RESET);
-		exit (EXIT_FAILURE);
+			ft_printf(GREEN"YOU WON\n"RESET);
+			exit (EXIT_FAILURE);
 	}
 }
 
@@ -163,9 +191,15 @@ int handle_input(int keysym, t_game *game)
 	if (keysym == KEY_UP || keysym == KEY_W)
 		player_move(game, --line, column);
 	if (keysym == KEY_LEFT || keysym == KEY_A)
+	{
+		game->plyr_left = true;
 		player_move(game, line, --column);
+	}
 	if (keysym == KEY_RIGHT || keysym == KEY_D)
+	{
+		game->plyr_left = false;
 		player_move(game, line, ++column);
+	}
 	if (keysym == KEY_DOWN || keysym == KEY_S)
 		player_move(game, ++line, column);
 	return (0);
@@ -177,6 +211,7 @@ void init_vars(t_game *game)
 	game->map.exit = 0;
 	game->map.players = 0;
 	game->movements = 0;
+	game->plyr_left = false;
 }
 
 size_t strlen_line(char *str)
@@ -288,7 +323,7 @@ void	check_map_parameters(t_game *game)
 	i = 0;
 	while (i < game->map.lines)
 	{
-		if (check_for_invalid_map_parameters(game->map.line[i]) == 1)
+		if (check_for_invalid_map_parameters(game->map.line[i]) == true)
 			error_msg("Not expected map parameter");
 		game->map.coins += count_occurrences(game->map.line[i], COINS);
 		game->map.exit += count_occurrences(game->map.line[i], MAP_EXIT);
@@ -350,20 +385,14 @@ void print_map(t_game *game)
 			if (game->map.line[j][i] == COINS)
 				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->coins.xpm_ptr, i * game->coins.width, j * game->coins.height);
 			if (game->map.line[j][i] == MAP_EXIT)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->exit.xpm_ptr, i * game->exit.width, j * game->exit.height);
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->exit_closed.xpm_ptr, i * game->exit_closed.width, j * game->exit_closed.height);
 			if (game->map.line[j][i] == PLAYER)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->player.xpm_ptr, i * game->player.width, j * game->player.height);
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->player_right.xpm_ptr, i * game->player_right.width, j * game->player_right.height);
 			i++;
 		}
 		i = 0; 
 		j++;
 	}
-}
-
-void print_player(t_game *game, int pos_x, int pos_y)
-{
-	mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->floor.xpm_ptr, pos_x * game->floor.width, pos_y * game->floor.height);
-	mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->player.xpm_ptr, (pos_x + 1) * game->player.width, pos_y * game->player.height);
 }
 
 
@@ -382,10 +411,14 @@ void init_game(t_game *game)
 	"folder/assets/sprites/floor.xpm", &game->floor.width, &game->floor.height);
 	game->coins.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
 	"folder/assets/sprites/coin-bag.xpm", &game->coins.width, &game->coins.height);
-	game->exit.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	"folder/assets/sprites/exit.xpm", &game->exit.width, &game->exit.height);
-	game->player.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	"folder/assets/sprites/player.xpm", &game->player.width, &game->player.height);
+	game->exit_closed.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
+	"folder/assets/sprites/manhole-cover.xpm", &game->exit_closed.width, &game->exit_closed.height);
+	game->exit_open.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
+	"folder/assets/sprites/exit-ladder.xpm", &game->exit_open.width, &game->exit_open.height);
+	game->player_right.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
+	"folder/assets/sprites/player-right.xpm", &game->player_right.width, &game->player_right.height);
+	game->player_left.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
+	"folder/assets/sprites/player-left.xpm", &game->player_left.width, &game->player_left.height);
 }
 
 int	main(int argc, char **argv)
