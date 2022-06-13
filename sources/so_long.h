@@ -17,30 +17,38 @@
 # include <fcntl.h>
 # include "../libraries/Libft/libft.h"
 
-# define RED 		"\033[1;31m"
-# define GREY 		"\033[0;90m"
-# define RESET 		"\033[0m"
+# define RED 			"\033[1;31m"
+# define GREY 			"\033[0;90m"
+# define RESET 			"\033[0m"
 
-# define WALL		'1'
-# define FLOOR 		'0'
-# define COINS  	'C'
-# define MAP_EXIT  	'E'
-# define PLAYER 	'P'
+# define WALL_XPM 		"assets/folder/assets/sprites/wall.xpm"
+# define FLOOR_XPM		"assets/folder/assets/sprites/floor.xpm"
+# define COIN_XPM		"assets/folder/assets/sprites/coin-bag.xpm"
+# define CLOSED_EXIT_XPM	"assets/folder/assets/sprites/manhole-cover.xpm"
+# define OPEN_EXIT_XPM		"assets/folder/assets/sprites/exit-ladder.xpm"
+# define PLAYER_RIGTH_XPM	"assets/folder/assets/sprites/player-right.xpm"
+# define PLAYER_LEFT_XPM	"assets/folder/assets/sprites/player-left.xpm"
 
-# define KEY_W		119
-# define KEY_A		97
-# define KEY_S		115
-# define KEY_D		100
+# define WALL			'1'
+# define FLOOR 			'0'
+# define COINS  		'C'
+# define MAP_EXIT  		'E'
+# define PLAYER 		'P'
 
-# define KEY_UP  	65362
-# define KEY_LEFT  	65361
-# define KEY_RIGHT 	65363
-# define KEY_DOWN  	65364
+# define KEY_W			119
+# define KEY_A			97
+# define KEY_S			115
+# define KEY_D			100
 
-# define KEY_Q		113
-# define KEY_ESC  	65307
+# define KEY_UP  		65362
+# define KEY_LEFT  		65361
+# define KEY_RIGHT 		65363
+# define KEY_DOWN  		65364
 
-# define HEADER		25
+# define KEY_Q			113
+# define KEY_ESC  		65307
+
+# define HEADER			25
 
 typedef enum e_bool
 {
