@@ -1,0 +1,20 @@
+void init_sprites(t_game *game)
+{
+	int mlx;
+
+	mlx = game->mlx_ptr;
+	game->wall.xpm_ptr = mlx_xpm_file_to_image(mlx, \
+	WALL_XPM, &game->wall.width, &game->wall.height);
+	game->floor.xpm_ptr = mlx_xpm_file_to_image(mlx, \
+	FLOOR_XPM, &game->floor.width, &game->floor.height);
+	game->coins.xpm_ptr = mlx_xpm_file_to_image(mlx, \
+	COIN_XPM, &game->coins.width, &game->coins.height);
+	Game->exit_closed.xpm_ptr = mlx_xpm_file_to_image(mlx, \
+	CLOSED_EXIT_XPM, &game->exit_closed.width, &game->exit_closed.height);
+	game->exit_open.xpm_ptr = mlx_xpm_file_to_image(mlx, \
+	OPEN_EXIT_XPM, &game->exit_open.width, &game->exit_open.height);
+	game->player_right.xpm_ptr = mlx_xpm_file_to_image(mlx, \
+	PLAYER_RIGTH_XPM, &game->player_right.width, &game->player_right.height);
+	game->player_left.xpm_ptr = mlx_xpm_file_to_image(mlx, \
+	PLAYER_LEFT_XPM, &game->player_left.width, &game->player_left.height);
+}
