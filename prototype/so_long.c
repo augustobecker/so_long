@@ -6,7 +6,7 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 21:16:12 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/06/18 03:51:48 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/06/18 05:48:13 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,17 +24,28 @@
 #include <errno.h>
 #include "../assets/folder/libraries/Libft/libft.h"
 
-# define GREEN	"\033[0;32m"
-# define RED 	"\033[1;31m"
-# define GREY 	"\033[0;90m"
-# define RESET 	"\033[0m"
+# define GREEN				"\033[0;32m"
+# define RED 				"\033[1;31m"
+# define GREY 				"\033[0;90m"
+# define RESET 				"\033[0m"
 
-# define WALL		'1'
-# define COINS  	'C'
-# define MAP_EXIT  	'E'
-# define PLAYER		'P'
-# define EMPTY_SPC  '0'
-# define TRAP		'T'
+# define WALL				'1'
+# define COINS  			'C'
+# define MAP_EXIT 		 	'E'
+# define PLAYER				'P'
+# define FLOOR 				'0'
+# define TRAP				'T'
+
+# define WALL_XPM			"assets/folder/assets/sprites/wall.xpm"
+# define COINS_XPM			"assets/folder/assets/sprites/coin-bag.xpm"
+# define OPEN_EXIT_XPM		"assets/folder/assets/sprites/open-exit.xpm"
+# define EXIT_CLOSED_XPM	"assets/folder/assets/sprites/exit-closed.xpm"
+# define PLAYER_FRONT_XPM	"assets/folder/assets/sprites/player/front.xpm"
+# define PLAYER_LEFT_XPM	"assets/folder/assets/sprites/player/left.xpm"
+# define PLAYER_RIGHT_XPM	"assets/folder/assets/sprites/player/right.xpm"
+# define PLAYER_BACK_XPM	"assets/folder/assets/sprites/player/back.xpm"
+# define FLOOR_XPM			"assets/folder/assets/sprites/floor.xpm"
+# define TRAP_XPM			"assets/folder/assets/sprites/radioactive-river.xpm"
 
 # define KEY_W		119
 # define KEY_A		97
@@ -48,13 +59,11 @@
 
 # define KEY_Q		113
 # define KEY_ESC  	65307
-	
-# define HEADER		0
 
-#define TOP			1
+#define FRONT		1
 #define LEFT		2
 #define RIGHT		3
-#define DOWN		4
+#define BACK		4
 
 typedef enum e_bool
 {
@@ -139,34 +148,34 @@ void render_player_move(t_game *game, int line, int column)
 	int i;
 	
 	i = 0;
-	game->map.line[game->map.player.y][game->map.player.x] = EMPTY_SPC;
+	game->map.line[game->map.player.y][game->map.player.x] = FLOOR;
 	game->map.line[line][column] = PLAYER;
 	mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
 	game->floor.xpm_ptr, game->map.player.x * game->floor.width, \
-	 game->map.player.y * game->floor.height + HEADER);
-	 if (game->player_sprite == DOWN)
-	{
-		mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
-		game->player_front.xpm_ptr, column * game->player_front.width, \
-		line * game->player_front.height + HEADER);
-	}
-	if (game->player_sprite == TOP)
+	 game->map.player.y * game->floor.height);
+	if (game->player_sprite == FRONT)
 	{
 		mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
 		game->player_back.xpm_ptr, column * game->player_back.width, \
-		line * game->player_back.height + HEADER);
-	}
-	if (game->player_sprite == RIGHT)
-	{
-		mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
-		game->player_right.xpm_ptr, column * game->player_right.width, \
-		line * game->player_right.height + HEADER);
+		line * game->player_back.height);
 	}
 	if (game->player_sprite == LEFT)
 	{
 		mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
 		game->player_left.xpm_ptr, column * game->player_left.width, \
-		line * game->player_left.height + HEADER);
+		line * game->player_left.height);
+	}
+	if (game->player_sprite == RIGHT)
+	{
+		mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
+		game->player_right.xpm_ptr, column * game->player_right.width, \
+		line * game->player_right.height);
+	}
+	 if (game->player_sprite == BACK)
+	{
+		mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
+		game->player_front.xpm_ptr, column * game->player_front.width, \
+		line * game->player_front.height);
 	}
 	game->map.player.x = column;
 	game->map.player.y = line;
@@ -190,7 +199,7 @@ void print_open_exit(t_game *game)
 		while (i < game->map.columns)
 		{
 			if (game->map.line[j][i] == MAP_EXIT)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->exit_open.xpm_ptr, i * game->exit_open.width, j * game->exit_open.height + HEADER);
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->exit_open.xpm_ptr, i * game->exit_open.width, j * game->exit_open.height);
 			i++;
 		}
 		i = 0; 
@@ -200,7 +209,7 @@ void print_open_exit(t_game *game)
 
 void player_move(t_game *game, int line, int column)
 {
-	if (game->map.line[line][column] == EMPTY_SPC)
+	if (game->map.line[line][column] == FLOOR)
 	{
 		render_player_move(game, line, column);
 		return ;
@@ -238,7 +247,7 @@ int handle_input(int keysym, t_game *game)
 	}
 	if (keysym == KEY_UP || keysym == KEY_W)
 	{
-		game->player_sprite = TOP;
+		game->player_sprite = FRONT;
 		player_move(game, --line, column);
 	}
 	if (keysym == KEY_LEFT || keysym == KEY_A)
@@ -253,7 +262,7 @@ int handle_input(int keysym, t_game *game)
 	}
 	if (keysym == KEY_DOWN || keysym == KEY_S)
 	{
-		game->player_sprite = DOWN;
+		game->player_sprite = BACK;
 		player_move(game, ++line, column);
 	}
 	return (0);
@@ -300,7 +309,7 @@ t_bool check_for_invalid_map_parameters(char *line)
 	while ((line[parameter]) && ft_isprint(line[parameter]) == true)
 	{
 		if ((line[parameter] == WALL) 
-			|| (line[parameter] == EMPTY_SPC)
+			|| (line[parameter] == FLOOR)
 			|| (line[parameter] == COINS) 
 			|| (line[parameter] == MAP_EXIT)
 			|| (line[parameter] == PLAYER)
@@ -432,17 +441,17 @@ void print_map(t_game *game)
 		while (i < game->map.columns)
 		{
 			if (game->map.line[j][i] == WALL)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->wall.xpm_ptr, i * game->wall.width, j * game->wall.height + HEADER);
-			if (game->map.line[j][i] == EMPTY_SPC)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->floor.xpm_ptr, i * game->floor.width, j * game->floor.height + HEADER);
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->wall.xpm_ptr, i * game->wall.width, j * game->wall.height);
+			if (game->map.line[j][i] == FLOOR)
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->floor.xpm_ptr, i * game->floor.width, j * game->floor.height);
 			if (game->map.line[j][i] == COINS)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->coins.xpm_ptr, i * game->coins.width, j * game->coins.height + HEADER);
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->coins.xpm_ptr, i * game->coins.width, j * game->coins.height);
 			if (game->map.line[j][i] == MAP_EXIT)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->exit_closed.xpm_ptr, i * game->exit_closed.width, j * game->exit_closed.height + HEADER);
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->exit_closed.xpm_ptr, i * game->exit_closed.width, j * game->exit_closed.height);
 			if (game->map.line[j][i] == PLAYER)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->player_right.xpm_ptr, i * game->player_right.width, j * game->player_right.height + HEADER);
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->player_right.xpm_ptr, i * game->player_right.width, j * game->player_right.height);
 			if (game->map.line[j][i] == TRAP)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->trap.xpm_ptr, i * game->trap.width, j * game->trap.height + HEADER);	
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->trap.xpm_ptr, i * game->trap.width, j * game->trap.height);	
 			i++;
 		}
 		i = 0; 
@@ -456,29 +465,29 @@ void init_game(t_game *game)
 	if (game->mlx_ptr == NULL)
 		error_msg("Couldn't find mlx pointer. Try it using a VNC.");
 	game->win_ptr = mlx_new_window(game->mlx_ptr, \
-	game->map.columns * 32, (game->map.lines * 32) + HEADER, "so_long");
+	game->map.columns * 32, game->map.lines * 32, "so_long");
 	if (game->win_ptr == NULL)
 		error_msg("Couldn't create the Window.");
 	game->wall.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	"assets/folder/assets/sprites/wall.xpm", &game->wall.width, &game->wall.height);
+	WALL_XPM, &game->wall.width, &game->wall.height);
 	game->floor.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	"assets/folder/assets/sprites/floor.xpm", &game->floor.width, &game->floor.height);
+	FLOOR_XPM, &game->floor.width, &game->floor.height);
 	game->coins.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	"assets/folder/assets/sprites/coin-bag.xpm", &game->coins.width, &game->coins.height);
+	COINS_XPM, &game->coins.width, &game->coins.height);
 	game->exit_closed.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	"assets/folder/assets/sprites/exit-closed.xpm", &game->exit_closed.width, &game->exit_closed.height);
+	EXIT_CLOSED_XPM, &game->exit_closed.width, &game->exit_closed.height);
 	game->exit_open.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	"assets/folder/assets/sprites/open-exit.xpm", &game->exit_open.width, &game->exit_open.height);
-	game->player_right.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	"assets/folder/assets/sprites/player/right.xpm", &game->player_right.width, &game->player_right.height);
-	game->player_left.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	"assets/folder/assets/sprites/player/left.xpm", &game->player_left.width, &game->player_left.height);
+	OPEN_EXIT_XPM, &game->exit_open.width, &game->exit_open.height);
 	game->player_front.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	"assets/folder/assets/sprites/player/front.xpm", &game->player_front.width, &game->player_front.height);
+	PLAYER_FRONT_XPM, &game->player_front.width, &game->player_front.height);
+	game->player_left.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
+	PLAYER_LEFT_XPM, &game->player_left.width, &game->player_left.height);
+	game->player_right.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
+	PLAYER_RIGHT_XPM, &game->player_right.width, &game->player_right.height);
 	game->player_back.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	"assets/folder/assets/sprites/player/back.xpm", &game->player_back.width, &game->player_back.height);
+	PLAYER_BACK_XPM, &game->player_back.width, &game->player_back.height);
 	game->trap.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	"assets/folder/assets/sprites/radioactive-river.xpm", &game->trap.width, &game->trap.height);
+	TRAP_XPM, &game->trap.width, &game->trap.height);
 }
 
 void print_assets(t_game *game, char c)
