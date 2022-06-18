@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   so_long.c                                          :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 21:16:12 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/04/12 15:43:47 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/06/18 03:51:48 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <errno.h>
-#include "Libft/libft.h"
+#include "../assets/folder/libraries/Libft/libft.h"
 
 # define GREEN	"\033[0;32m"
 # define RED 	"\033[1;31m"
@@ -34,6 +34,7 @@
 # define MAP_EXIT  	'E'
 # define PLAYER		'P'
 # define EMPTY_SPC  '0'
+# define TRAP		'T'
 
 # define KEY_W		119
 # define KEY_A		97
@@ -47,6 +48,13 @@
 
 # define KEY_Q		113
 # define KEY_ESC  	65307
+	
+# define HEADER		0
+
+#define TOP			1
+#define LEFT		2
+#define RIGHT		3
+#define DOWN		4
 
 typedef enum e_bool
 {
@@ -91,7 +99,10 @@ typedef struct s_game
 	t_image		exit_closed;
 	t_image		player_right;
 	t_image		player_left;
-	t_bool		plyr_left;
+	t_image		player_back;
+	t_image		player_front;
+	t_image		trap;
+	int			player_sprite;
 }	t_game;
 
 
@@ -106,32 +117,65 @@ int error_msg(char *message)
 	exit (EXIT_FAILURE);
 }
 
-// 2nd 'n 3rd parameters - ponto futuro do player
-// game->map.line[line][column] - posição futura
+int	ft_count_occurrences(char *str, char c)
+{
+	int	occurrences;
+	int	i;
+
+	i = 0;
+	occurrences = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+			occurrences++;
+		i++;
+	}
+	return (occurrences);
+}
 
 void render_player_move(t_game *game, int line, int column)
 {
+	char *num;
+	int i;
+	
+	i = 0;
 	game->map.line[game->map.player.y][game->map.player.x] = EMPTY_SPC;
 	game->map.line[line][column] = PLAYER;
 	mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
 	game->floor.xpm_ptr, game->map.player.x * game->floor.width, \
-	 game->map.player.y * game->floor.height);
-	if (game->plyr_left == false)
+	 game->map.player.y * game->floor.height + HEADER);
+	 if (game->player_sprite == DOWN)
+	{
+		mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
+		game->player_front.xpm_ptr, column * game->player_front.width, \
+		line * game->player_front.height + HEADER);
+	}
+	if (game->player_sprite == TOP)
+	{
+		mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
+		game->player_back.xpm_ptr, column * game->player_back.width, \
+		line * game->player_back.height + HEADER);
+	}
+	if (game->player_sprite == RIGHT)
 	{
 		mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
 		game->player_right.xpm_ptr, column * game->player_right.width, \
-		line * game->player_right.height);
+		line * game->player_right.height + HEADER);
 	}
-	else
+	if (game->player_sprite == LEFT)
 	{
 		mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
 		game->player_left.xpm_ptr, column * game->player_left.width, \
-		line * game->player_left.height);
+		line * game->player_left.height + HEADER);
 	}
 	game->map.player.x = column;
 	game->map.player.y = line;
 	game->movements++;
-	ft_printf("Movements: %d\n", game->movements);
+	num = ft_itoa(game->movements);
+	while (i < game->map.columns)
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->wall.xpm_ptr, i++ * game->wall.width, 0 * game->wall.height);
+	mlx_string_put(game->mlx_ptr, game->win_ptr, 30, 22, 99999 , ft_strjoin("Movements : ", num));
+	free(num);
 }
 
 void print_open_exit(t_game *game)
@@ -146,7 +190,7 @@ void print_open_exit(t_game *game)
 		while (i < game->map.columns)
 		{
 			if (game->map.line[j][i] == MAP_EXIT)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->exit_open.xpm_ptr, i * game->exit_open.width, j * game->exit_open.height);
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->exit_open.xpm_ptr, i * game->exit_open.width, j * game->exit_open.height + HEADER);
 			i++;
 		}
 		i = 0; 
@@ -167,6 +211,10 @@ void player_move(t_game *game, int line, int column)
 		game->map.coins--;
 		if (game->map.coins == 0)
 			print_open_exit(game);
+	}
+	if (game->map.line[line][column] == TRAP)
+	{
+		error_msg("YOU LOSE! Fell into a RADIOACTIVE river");
 	}
 	if ((game->map.line[line][column] == MAP_EXIT) && (game->map.coins == 0))
 	{
@@ -189,19 +237,25 @@ int handle_input(int keysym, t_game *game)
 		return (0);
 	}
 	if (keysym == KEY_UP || keysym == KEY_W)
+	{
+		game->player_sprite = TOP;
 		player_move(game, --line, column);
+	}
 	if (keysym == KEY_LEFT || keysym == KEY_A)
 	{
-		game->plyr_left = true;
+		game->player_sprite = LEFT;
 		player_move(game, line, --column);
 	}
 	if (keysym == KEY_RIGHT || keysym == KEY_D)
 	{
-		game->plyr_left = false;
+		game->player_sprite = RIGHT;
 		player_move(game, line, ++column);
 	}
 	if (keysym == KEY_DOWN || keysym == KEY_S)
+	{
+		game->player_sprite = DOWN;
 		player_move(game, ++line, column);
+	}
 	return (0);
 }
 
@@ -211,8 +265,9 @@ void init_vars(t_game *game)
 	game->map.exit = 0;
 	game->map.players = 0;
 	game->movements = 0;
-	game->plyr_left = false;
+	game->player_sprite = RIGHT;
 }
+
 
 size_t strlen_line(char *str)
 {
@@ -248,7 +303,8 @@ t_bool check_for_invalid_map_parameters(char *line)
 			|| (line[parameter] == EMPTY_SPC)
 			|| (line[parameter] == COINS) 
 			|| (line[parameter] == MAP_EXIT)
-			|| (line[parameter] == PLAYER))
+			|| (line[parameter] == PLAYER)
+			|| (line[parameter] == TRAP))
 			parameter++;
 		else
 			return (true);
@@ -283,8 +339,6 @@ void init_map(t_game *game, char *argv)
 	game->map.columns = strlen_line(game->map.line[0]);
 }
 
-
-//CHANGE ON GITHUB
 void set_start_position(t_game *game, char *line, int y)
 {
 	int x;
@@ -297,7 +351,6 @@ void set_start_position(t_game *game, char *line, int y)
 	game->map.player.x = x;
 	game->map.player.y = y;
 }
-// this function
 
 int	count_occurrences(char *str, char c)
 {
@@ -379,15 +432,17 @@ void print_map(t_game *game)
 		while (i < game->map.columns)
 		{
 			if (game->map.line[j][i] == WALL)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->wall.xpm_ptr, i * game->wall.width, j * game->wall.height);
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->wall.xpm_ptr, i * game->wall.width, j * game->wall.height + HEADER);
 			if (game->map.line[j][i] == EMPTY_SPC)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->floor.xpm_ptr, i * game->floor.width, j * game->floor.height);
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->floor.xpm_ptr, i * game->floor.width, j * game->floor.height + HEADER);
 			if (game->map.line[j][i] == COINS)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->coins.xpm_ptr, i * game->coins.width, j * game->coins.height);
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->coins.xpm_ptr, i * game->coins.width, j * game->coins.height + HEADER);
 			if (game->map.line[j][i] == MAP_EXIT)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->exit_closed.xpm_ptr, i * game->exit_closed.width, j * game->exit_closed.height);
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->exit_closed.xpm_ptr, i * game->exit_closed.width, j * game->exit_closed.height + HEADER);
 			if (game->map.line[j][i] == PLAYER)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->player_right.xpm_ptr, i * game->player_right.width, j * game->player_right.height);
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->player_right.xpm_ptr, i * game->player_right.width, j * game->player_right.height + HEADER);
+			if (game->map.line[j][i] == TRAP)
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->trap.xpm_ptr, i * game->trap.width, j * game->trap.height + HEADER);	
 			i++;
 		}
 		i = 0; 
@@ -395,30 +450,40 @@ void print_map(t_game *game)
 	}
 }
 
-
 void init_game(t_game *game)
 {
 	game->mlx_ptr = mlx_init();
 	if (game->mlx_ptr == NULL)
 		error_msg("Couldn't find mlx pointer. Try it using a VNC.");
 	game->win_ptr = mlx_new_window(game->mlx_ptr, \
-	game->map.columns * 32, game->map.lines * 32, "so_long");
+	game->map.columns * 32, (game->map.lines * 32) + HEADER, "so_long");
 	if (game->win_ptr == NULL)
 		error_msg("Couldn't create the Window.");
 	game->wall.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	"folder/assets/sprites/wall.xpm", &game->wall.width, &game->wall.height);
+	"assets/folder/assets/sprites/wall.xpm", &game->wall.width, &game->wall.height);
 	game->floor.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	"folder/assets/sprites/floor.xpm", &game->floor.width, &game->floor.height);
+	"assets/folder/assets/sprites/floor.xpm", &game->floor.width, &game->floor.height);
 	game->coins.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	"folder/assets/sprites/coin-bag.xpm", &game->coins.width, &game->coins.height);
+	"assets/folder/assets/sprites/coin-bag.xpm", &game->coins.width, &game->coins.height);
 	game->exit_closed.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	"folder/assets/sprites/manhole-cover.xpm", &game->exit_closed.width, &game->exit_closed.height);
+	"assets/folder/assets/sprites/exit-closed.xpm", &game->exit_closed.width, &game->exit_closed.height);
 	game->exit_open.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	"folder/assets/sprites/exit-ladder.xpm", &game->exit_open.width, &game->exit_open.height);
+	"assets/folder/assets/sprites/open-exit.xpm", &game->exit_open.width, &game->exit_open.height);
 	game->player_right.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	"folder/assets/sprites/player-right.xpm", &game->player_right.width, &game->player_right.height);
+	"assets/folder/assets/sprites/player/right.xpm", &game->player_right.width, &game->player_right.height);
 	game->player_left.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	"folder/assets/sprites/player-left.xpm", &game->player_left.width, &game->player_left.height);
+	"assets/folder/assets/sprites/player/left.xpm", &game->player_left.width, &game->player_left.height);
+	game->player_front.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
+	"assets/folder/assets/sprites/player/front.xpm", &game->player_front.width, &game->player_front.height);
+	game->player_back.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
+	"assets/folder/assets/sprites/player/back.xpm", &game->player_back.width, &game->player_back.height);
+	game->trap.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
+	"assets/folder/assets/sprites/radioactive-river.xpm", &game->trap.width, &game->trap.height);
+}
+
+void print_assets(t_game *game, char c)
+{
+	ft_printf("%c", c);
 }
 
 int	main(int argc, char **argv)
@@ -430,9 +495,6 @@ int	main(int argc, char **argv)
 	init_vars(&game);
 	init_map(&game, argv[1]);
 	check_map(&game);
-	i = 0;
-	while (i <= game.map.lines)
-		ft_putendl_fd(game.map.line[i++], 1);
 	init_game(&game);
 	print_map(&game);
 	mlx_hook(game.win_ptr, 3, 1L << 1, handle_input, &game);
