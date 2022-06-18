@@ -1,8 +1,9 @@
 <h1 align="center"> so_long - @42sp </h1>
 
-<p align="center">:information_source: Um pequeno jogo 2D usando a Biblioteca Gráfica MiniLibX - Texturas, sprites e tiles incluídos. </p>
+<p align="center">:information_source: Um pequeno jogo 2D feito utilizando a Biblioteca Gráfica MiniLibX - Texturas, sprites e tiles incluídos. </p>
 
 <p align="center"><a href="https://www.42sp.org.br/" target="_blank"><img src="https://img.shields.io/static/v1?label=&message=SP&color=000&style=for-the-badge&logo=42""></a></p>
+<p align="center"><img src="https://user-images.githubusercontent.com/81205527/174392536-21619238-638a-4173-a77c-1b168c6c7898.png"> </p>
 <p align="center"><a href="https://github.com/augustobecker/SoLong/blob/main/README.md" target="_blank"><img src="https://img.shields.io/badge/available%20in-EN-blue"></a></p>
 
 ## Index
@@ -18,7 +19,7 @@
 O quinto projeto na escola de programação 42. Esse é o primeiro projeto gráfico que fazemos e podemos escolher entre 3 opções (FdF, Fractol e so_long),
 que abordaram áreas diferentes mas são todos projetos gráficos. O so_long consiste em um jogo top-down, que codificamos do 0,
 com auxilio da biblioteca MiniLibx. Envolve uma série de validações do mapa que recebemos, checagens para evitar leaks de memória,
-lidar com a engenharia do jogo em si, as sprites e os mapas.
+lidar com a engenharia do jogo em si, gerenciamento de janelas, eventos, as sprites e os mapas.
     
 <h2 align="center" id="requisitos"> Requisitos </h2>
 
@@ -58,19 +59,41 @@ E só pode conter os seguintes caracteres:
 | C	        | Coletáveis |
 | E	        |    Saída   |
 | P         |   Jogador  |      
-| 0         |   Piso     |    
+| 0         |   Piso     |
+    
+E para o bônus coloquei um novo parâmetro, que te faz perder uma vez que tente passar por cima dele:
+    
+| CARACTERE |	OBJETO   |
+| --------- | ---------- |
+| T         |   Obstáculo   |
+
     
 O mapa deve ser retangular e cercado de paredes '1'.
 
 Deve conter pelo menos uma saída 'E', um coletável 'C' e apenas um jogador 'P'.
     
 Pode conferir alguns exemplos na pasta /assets/maps desse projeto:
-    
-![image](https://user-images.githubusercontent.com/81205527/163024984-1ff511c1-17d2-4eef-8d97-90cc8a884c73.png)    
 
+<img src="https://user-images.githubusercontent.com/81205527/163024984-1ff511c1-17d2-4eef-8d97-90cc8a884c73.png">
+Esse arquivo .ber gera esse mapa:
+    
+    
+<img src="https://user-images.githubusercontent.com/81205527/174420150-0ee15e42-c7c3-4854-936b-fffaf13683c2.png">
+    
 <h3 align="center"> Controles </h3>   
     
-Use WASD ou as setas para se mover. Você só pode se mover um bloco por vez, após pegar todos os sacos de dinheiro, a tampa do bueiro se abre e você pode escapar pela escada. Além disso você pode conferir o número de movimentos que precisou para completar o jogo.
+| TECLA |	OBJETO   |
+| --------- | ---------- |
+| W ou ⬆️        |    Move para cima   |
+| A	ou ⬅️        |    Move para esquerda |
+| S	ou ⬇️     |    Move para baixo   |
+| D ou ➡️       |   Move para direita|      
+| Q ou Esc      |   Fecha o jogo     | 
+    
+    
+Use WASD ou as setas para se mover. Você só pode se mover um bloco por vez.
+
+Após pegar todos os sacos de dinheiro, a saída se abre e você pode escapar pela escada. Além disso você pode conferir o número de movimentos que precisou para completar o jogo.
 
 Pode fechar o jogo clicando no X no topo direito da janela, ou ainda pressionando Q ou Esc.
   
@@ -87,9 +110,12 @@ Percorrer o mesmo caminho pelo menos uma vez.
 Testar se consegue se movimentar tanto com as setas quanto com as teclas WASD.
     
 Conferir se a janela fecha quando clica no X, também pressionando a tecla Q e Esc.
-  
-Para testar as validações de mapa, que exige modificar alguns mapas, testar com uma extensão inválida e afins eu resolvi criar um tester.
-Não tinha encontrado nenhum outro até o momento.
+ 
+Para testar as validações de mapa como:
+    
+Extensão inválida, mapa faltando parâmetros ou com parâmetros extra, mapa inexistente, mapa não retangular, argumentos extra ou em falta na linha de comando. 
+
+Eu resolvi criar um tester. Não tinha encontrado nenhum outro até o momento.
 
 Para testar o código desse repositório:
     
