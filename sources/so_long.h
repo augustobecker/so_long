@@ -13,27 +13,44 @@
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
-# include <mlx.h>
-# include <fcntl.h>
-# include "../libraries/Libft/libft.h"
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <mlx.h>
+#include <X11/X.h>
+#include <X11/keysym.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <errno.h>
+#include "../libraries/Libft/libft.h"
 
+# define GREEN			"\033[0;32m"
 # define RED 			"\033[1;31m"
 # define GREY 			"\033[0;90m"
 # define RESET 			"\033[0m"
 
-# define WALL_XPM 		"assets/folder/assets/sprites/wall.xpm"
-# define FLOOR_XPM		"assets/folder/assets/sprites/floor.xpm"
-# define COIN_XPM		"assets/folder/assets/sprites/coin-bag.xpm"
-# define CLOSED_EXIT_XPM	"assets/folder/assets/sprites/manhole-cover.xpm"
-# define OPEN_EXIT_XPM		"assets/folder/assets/sprites/exit-ladder.xpm"
-# define PLAYER_RIGTH_XPM	"assets/folder/assets/sprites/player-right.xpm"
-# define PLAYER_LEFT_XPM	"assets/folder/assets/sprites/player-left.xpm"
-
 # define WALL			'1'
-# define FLOOR 			'0'
 # define COINS  		'C'
-# define MAP_EXIT  		'E'
-# define PLAYER 		'P'
+# define MAP_EXIT 	 	'E'
+# define PLAYER			'P'
+# define FLOOR 			'0'
+# define TOXIC			'T'
+# define SPIKES			'S'
+
+# define WALL_XPM		"assets/folder/assets/sprites/wall.xpm"
+# define COINS_XPM		"assets/folder/assets/sprites/coin-bag.xpm"
+# define OPEN_EXIT_XPM		"assets/folder/assets/sprites/open-exit.xpm"
+# define EXIT_CLOSED_XPM	"assets/folder/assets/sprites/exit-closed.xpm"
+# define PLAYER_FRONT_XPM	"assets/folder/assets/sprites/player/front.xpm"
+# define PLAYER_LEFT_XPM	"assets/folder/assets/sprites/player/left.xpm"
+# define PLAYER_RIGHT_XPM	"assets/folder/assets/sprites/player/right.xpm"
+# define PLAYER_BACK_XPM	"assets/folder/assets/sprites/player/back.xpm"
+# define FLOOR_XPM		"assets/folder/assets/sprites/floor.xpm"
+# define TOXIC_XPM		"assets/folder/assets/sprites/toxic-river.xpm"
+# define SPIKES_XPM		"assets/folder/assets/sprites/spikes.xpm"
 
 # define KEY_W			119
 # define KEY_A			97
@@ -48,7 +65,10 @@
 # define KEY_Q			113
 # define KEY_ESC  		65307
 
-# define HEADER			25
+#define FRONT			1
+#define LEFT			2
+#define RIGHT			3
+#define BACK			4
 
 typedef enum e_bool
 {
@@ -67,7 +87,7 @@ typedef struct s_image
 	void	*xpm_ptr;
 	int	width;
 	int	height;
-}	t_image;
+} t_image;
 
 typedef struct s_map
 {
@@ -85,13 +105,21 @@ typedef struct s_game
 	void		*mlx_ptr;
 	void		*win_ptr;
 	int 		movements;
+	int		player_sprite;
 	t_map		map;
 	t_image		wall;
 	t_image		floor;
 	t_image		coins;
-	t_image		exit;
-	t_image		player_one;
+	t_image		exit_open;
+	t_image		exit_closed;
+	t_image		player_right;
+	t_image		player_left;
+	t_image		player_back;
+	t_image		player_front;
+	t_image		toxic;
+	t_image		spikes;
 }	t_game;
+
 
 void	check_command_line_arguments(int argc, char **argv);
 void	init_map(t_game *game, char *argv);
