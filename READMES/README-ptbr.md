@@ -61,11 +61,12 @@ E só pode conter os seguintes caracteres:
 | P         |   Jogador  |      
 | 0         |   Piso     |
     
-E para o bônus coloquei um novo parâmetro, que te faz perder uma vez que tente passar por cima dele:
+E para o bônus coloquei novos parâmetros, que te fazem perder uma vez que tente passar por cima:
     
 | CARACTERE |	OBJETO   |
 | --------- | ---------- |
-| T         |   Obstáculo   |
+| T         |   Poça Tóxica  |
+| S         |   Espinhos   |
 
     
 O mapa deve ser retangular e cercado de paredes '1'.
