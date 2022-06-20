@@ -6,7 +6,7 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/10 21:16:12 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/06/18 05:48:13 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/06/20 15:08:40 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,22 +30,24 @@
 # define RESET 				"\033[0m"
 
 # define WALL				'1'
-# define COINS  			'C'
-# define MAP_EXIT 		 	'E'
-# define PLAYER				'P'
 # define FLOOR 				'0'
-# define TRAP				'T'
+# define COINS  			'C'
+# define PLAYER				'P'
+# define MAP_EXIT 		 	'E'
+# define TOXIC				'T'
+# define SPIKES				'S'
 
 # define WALL_XPM			"assets/folder/assets/sprites/wall.xpm"
+# define FLOOR_XPM			"assets/folder/assets/sprites/floor.xpm"
 # define COINS_XPM			"assets/folder/assets/sprites/coin-bag.xpm"
-# define OPEN_EXIT_XPM		"assets/folder/assets/sprites/open-exit.xpm"
-# define EXIT_CLOSED_XPM	"assets/folder/assets/sprites/exit-closed.xpm"
 # define PLAYER_FRONT_XPM	"assets/folder/assets/sprites/player/front.xpm"
 # define PLAYER_LEFT_XPM	"assets/folder/assets/sprites/player/left.xpm"
 # define PLAYER_RIGHT_XPM	"assets/folder/assets/sprites/player/right.xpm"
 # define PLAYER_BACK_XPM	"assets/folder/assets/sprites/player/back.xpm"
-# define FLOOR_XPM			"assets/folder/assets/sprites/floor.xpm"
-# define TRAP_XPM			"assets/folder/assets/sprites/radioactive-river.xpm"
+# define OPEN_EXIT_XPM		"assets/folder/assets/sprites/open-exit.xpm"
+# define EXIT_CLOSED_XPM	"assets/folder/assets/sprites/exit-closed.xpm"
+# define TOXIC_XPM			"assets/folder/assets/sprites/toxic-river.xpm"
+# define SPIKES_XPM			"assets/folder/assets/sprites/spikes.xpm"
 
 # define KEY_W		119
 # define KEY_A		97
@@ -80,8 +82,8 @@ typedef struct s_position
 typedef struct s_image
 {
 	void	*xpm_ptr;
-	int		width;
-	int		height;
+	int		x;
+	int		y;
 } t_image;
 
 typedef struct s_map
@@ -100,27 +102,28 @@ typedef struct s_game
 	void		*mlx_ptr;
 	void		*win_ptr;
 	int 		movements;
+	int			player_sprite;
 	t_map		map;
 	t_image		wall;
 	t_image		floor;
 	t_image		coins;
-	t_image		exit_open;
+	t_image		open_exit;
 	t_image		exit_closed;
 	t_image		player_right;
 	t_image		player_left;
 	t_image		player_back;
 	t_image		player_front;
-	t_image		trap;
-	int			player_sprite;
+	t_image		toxic;
+	t_image		spikes;
 }	t_game;
 
 
-static int handle_no_event(void *game)
+static int ft_handle_no_event(void *game)
 {
 	return (0);
 }
 
-int error_msg(char *message)
+int ft_error_msg(char *message)
 {
 	ft_printf(RED"Error\n"GREY"%s\n"RESET, message);
 	exit (EXIT_FAILURE);
@@ -142,7 +145,7 @@ int	ft_count_occurrences(char *str, char c)
 	return (occurrences);
 }
 
-void render_player_move(t_game *game, int line, int column)
+void ft_render_player_move(t_game *game, int line, int column)
 {
 	char *num;
 	int i;
@@ -151,43 +154,43 @@ void render_player_move(t_game *game, int line, int column)
 	game->map.line[game->map.player.y][game->map.player.x] = FLOOR;
 	game->map.line[line][column] = PLAYER;
 	mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
-	game->floor.xpm_ptr, game->map.player.x * game->floor.width, \
-	 game->map.player.y * game->floor.height);
+	game->floor.xpm_ptr, game->map.player.x * game->floor.y, \
+	 game->map.player.y * game->floor.x);
 	if (game->player_sprite == FRONT)
 	{
 		mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
-		game->player_back.xpm_ptr, column * game->player_back.width, \
-		line * game->player_back.height);
+		game->player_back.xpm_ptr, column * game->player_back.y, \
+		line * game->player_back.x);
 	}
 	if (game->player_sprite == LEFT)
 	{
 		mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
-		game->player_left.xpm_ptr, column * game->player_left.width, \
-		line * game->player_left.height);
+		game->player_left.xpm_ptr, column * game->player_left.y, \
+		line * game->player_left.x);
 	}
 	if (game->player_sprite == RIGHT)
 	{
 		mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
-		game->player_right.xpm_ptr, column * game->player_right.width, \
-		line * game->player_right.height);
+		game->player_right.xpm_ptr, column * game->player_right.y, \
+		line * game->player_right.x);
 	}
 	 if (game->player_sprite == BACK)
 	{
 		mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
-		game->player_front.xpm_ptr, column * game->player_front.width, \
-		line * game->player_front.height);
+		game->player_front.xpm_ptr, column * game->player_front.y, \
+		line * game->player_front.x);
 	}
 	game->map.player.x = column;
 	game->map.player.y = line;
 	game->movements++;
 	num = ft_itoa(game->movements);
 	while (i < game->map.columns)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->wall.xpm_ptr, i++ * game->wall.width, 0 * game->wall.height);
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->wall.xpm_ptr, i++ * game->wall.y, 0 * game->wall.x);
 	mlx_string_put(game->mlx_ptr, game->win_ptr, 30, 22, 99999 , ft_strjoin("Movements : ", num));
 	free(num);
 }
 
-void print_open_exit(t_game *game)
+void ft_render_open_exit(t_game *game)
 {
 	int i;
 	int j;
@@ -199,7 +202,7 @@ void print_open_exit(t_game *game)
 		while (i < game->map.columns)
 		{
 			if (game->map.line[j][i] == MAP_EXIT)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->exit_open.xpm_ptr, i * game->exit_open.width, j * game->exit_open.height);
+				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->open_exit.xpm_ptr, i * game->open_exit.y, j * game->open_exit.x);
 			i++;
 		}
 		i = 0; 
@@ -207,23 +210,23 @@ void print_open_exit(t_game *game)
 	}
 }
 
-void player_move(t_game *game, int line, int column)
+void ft_player_move(t_game *game, int line, int column)
 {
 	if (game->map.line[line][column] == FLOOR)
 	{
-		render_player_move(game, line, column);
+		ft_render_player_move(game, line, column);
 		return ;
 	}
 	if (game->map.line[line][column] == COINS)
 	{
-		render_player_move(game, line, column);
+		ft_render_player_move(game, line, column);
 		game->map.coins--;
 		if (game->map.coins == 0)
-			print_open_exit(game);
+			ft_render_open_exit(game);
 	}
-	if (game->map.line[line][column] == TRAP)
+	if (game->map.line[line][column] == TOXIC || game->map.line[line][column] == SPIKES)
 	{
-		error_msg("YOU LOSE! Fell into a RADIOACTIVE river");
+		ft_error_msg("YOU LOSE!");
 	}
 	if ((game->map.line[line][column] == MAP_EXIT) && (game->map.coins == 0))
 	{
@@ -232,7 +235,7 @@ void player_move(t_game *game, int line, int column)
 	}
 }
 
-int handle_input(int keysym, t_game *game)
+int ft_handle_input(int keysym, t_game *game)
 {
 	int	column;
 	int	line;
@@ -242,33 +245,33 @@ int handle_input(int keysym, t_game *game)
 	if (keysym == KEY_Q || keysym == KEY_ESC)
 	{
 		//free_game(t_game *game);
-		error_msg("Escape key was pressed");
+		ft_error_msg("Escape key was pressed");
 		return (0);
 	}
 	if (keysym == KEY_UP || keysym == KEY_W)
 	{
 		game->player_sprite = FRONT;
-		player_move(game, --line, column);
+		ft_player_move(game, --line, column);
 	}
 	if (keysym == KEY_LEFT || keysym == KEY_A)
 	{
 		game->player_sprite = LEFT;
-		player_move(game, line, --column);
+		ft_player_move(game, line, --column);
 	}
 	if (keysym == KEY_RIGHT || keysym == KEY_D)
 	{
 		game->player_sprite = RIGHT;
-		player_move(game, line, ++column);
+		ft_player_move(game, line, ++column);
 	}
 	if (keysym == KEY_DOWN || keysym == KEY_S)
 	{
 		game->player_sprite = BACK;
-		player_move(game, ++line, column);
+		ft_player_move(game, ++line, column);
 	}
 	return (0);
 }
 
-void init_vars(t_game *game)
+void ft_init_vars(t_game *game)
 {
 	game->map.coins = 0;
 	game->map.exit = 0;
@@ -278,7 +281,7 @@ void init_vars(t_game *game)
 }
 
 
-size_t strlen_line(char *str)
+size_t ft_strlen_line(char *str)
 {
 	size_t	length;
 
@@ -288,20 +291,20 @@ size_t strlen_line(char *str)
 	return (length);
 }
 
-void check_command_line_arguments(int argc, char **argv)
+void ft_check_command_line_arguments(int argc, char **argv)
 {
 	int map_parameter_len;
 
 	if (argc > 10)
-		error_msg("Too many arguments (It should be only two).");
+		ft_error_msg("Too many arguments (It should be only two).");
 	if (argc < 2)
-		error_msg("The Map file is missing");
+		ft_error_msg("The Map file is missing");
 	map_parameter_len = ft_strlen(argv[1]);
 	if (!ft_strnstr(&argv[1][map_parameter_len - 4], ".ber", 4))
-		error_msg("Map file extention is wrong (It should be .ber).");
+		ft_error_msg("Map file extention is wrong (It should be .ber).");
 }
 
-t_bool check_for_invalid_map_parameters(char *line)
+t_bool ft_check_for_invalid_map_parameters(char *line)
 {
 	int parameter;
 
@@ -313,7 +316,8 @@ t_bool check_for_invalid_map_parameters(char *line)
 			|| (line[parameter] == COINS) 
 			|| (line[parameter] == MAP_EXIT)
 			|| (line[parameter] == PLAYER)
-			|| (line[parameter] == TRAP))
+			|| (line[parameter] == TOXIC)
+			|| (line[parameter] == SPIKES))
 			parameter++;
 		else
 			return (true);
@@ -321,7 +325,7 @@ t_bool check_for_invalid_map_parameters(char *line)
 	return (false);
 }
 
-void init_map(t_game *game, char *argv)
+void ft_init_map(t_game *game, char *argv)
 {
 	char 	*read_str;
 	char	*temporary;
@@ -331,10 +335,10 @@ void init_map(t_game *game, char *argv)
 	i = 0;
 	map_fd = open(argv, O_RDONLY);
 	if (map_fd == -1)
-		error_msg("The Map couldn't be opened. Invalid fd");
+		ft_error_msg("The Map couldn't be opened. Invalid fd");
 	read_str = ft_strdup(get_next_line(map_fd));
 	if (!read_str)
-		error_msg("Allocation failed");
+		ft_error_msg("Allocation failed");
 	temporary = ft_strdup("");
 	while (read_str)
 	{
@@ -345,10 +349,10 @@ void init_map(t_game *game, char *argv)
 	game->map.line = ft_split(temporary, '\n');
 	game->map.lines = ft_count_occurrences(temporary, '\n');
 	game->map.lines++;
-	game->map.columns = strlen_line(game->map.line[0]);
+	game->map.columns = ft_strlen_line(game->map.line[0]);
 }
 
-void set_start_position(t_game *game, char *line, int y)
+void ft_set_start_position(t_game *game, char *line, int y)
 {
 	int x;
 
@@ -361,7 +365,7 @@ void set_start_position(t_game *game, char *line, int y)
 	game->map.player.y = y;
 }
 
-int	count_occurrences(char *str, char c)
+int	line_occurrences(char *str, char c)
 {
 	int	occurrences;
 	int	i;
@@ -378,42 +382,42 @@ int	count_occurrences(char *str, char c)
 }
 
 
-void	check_map_parameters(t_game *game)
+void	ft_check_map_parameters(t_game *game)
 {
 	int	i;
 
 	i = 0;
 	while (i < game->map.lines)
 	{
-		if (check_for_invalid_map_parameters(game->map.line[i]) == true)
-			error_msg("Not expected map parameter");
-		game->map.coins += count_occurrences(game->map.line[i], COINS);
-		game->map.exit += count_occurrences(game->map.line[i], MAP_EXIT);
-		game->map.players += count_occurrences(game->map.line[i], PLAYER);
+		if (ft_check_for_invalid_map_parameters(game->map.line[i]) == true)
+			ft_error_msg("Not expected map parameter");
+		game->map.coins += line_occurrences(game->map.line[i], COINS);
+		game->map.exit += line_occurrences(game->map.line[i], MAP_EXIT);
+		game->map.players += line_occurrences(game->map.line[i], PLAYER);
 		if (game->map.players == 1)
-			set_start_position(game, game->map.line[i], i);
+			ft_set_start_position(game, game->map.line[i], i);
 		i++;
 	}
 	if (game->map.coins == 0)
-		error_msg("Invalid Map. There are no collectibles!");
+		ft_error_msg("Invalid Map. There are no collectibles!");
 	else if (game->map.exit == 0)
-		error_msg("Invalid Map. There is no Exit");
+		ft_error_msg("Invalid Map. There is no Exit");
 	else if (game->map.players != 1)
-		error_msg("Invalid Map. Invalid player quantity.");
+		ft_error_msg("Invalid Map. Invalid player quantity.");
 }
 
-void check_map(t_game *game)
+void ft_check_map(t_game *game)
 {
 	int 	i;
 
 	i = 0;
 	while(i < game->map.lines)
 	{
-		if ((int) strlen_line(game->map.line[i]) != game->map.columns)
-			error_msg("The Map must be rectangular!");
+		if ((int) ft_strlen_line(game->map.line[i]) != game->map.columns)
+			ft_error_msg("The Map must be rectangular!");
 		if ((game->map.line[i][0] != WALL)
 			|| (game->map.line[i][game->map.columns - 1] != WALL))
-			error_msg("The Map must be surrounded by walls! \
+			ft_error_msg("The Map must be surrounded by walls! \
 				A vertical wall is missing.");
 		i++;
 	}
@@ -422,72 +426,95 @@ void check_map(t_game *game)
 	{
 		if ((game->map.line[0][i] != WALL) 
 			|| (game->map.line[game->map.lines - 1][i] != WALL))
-			error_msg("The Map must be surrounded by walls! \
+			ft_error_msg("The Map must be surrounded by walls! \
 				A horizontal wall is missing.");
 		i++;
 	}
-	check_map_parameters(game);
+	ft_check_map_parameters(game);
 }
 
-void print_map(t_game *game)
+t_image	ft_new_sprite(void *mlx, char *path, t_game *game)
 {
-	int i;
-	int j;
+	t_image	sprite;
 
-	i = 0;
-	j = 0;
-	while (j < game->map.lines)
-	{
-		while (i < game->map.columns)
-		{
-			if (game->map.line[j][i] == WALL)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->wall.xpm_ptr, i * game->wall.width, j * game->wall.height);
-			if (game->map.line[j][i] == FLOOR)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->floor.xpm_ptr, i * game->floor.width, j * game->floor.height);
-			if (game->map.line[j][i] == COINS)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->coins.xpm_ptr, i * game->coins.width, j * game->coins.height);
-			if (game->map.line[j][i] == MAP_EXIT)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->exit_closed.xpm_ptr, i * game->exit_closed.width, j * game->exit_closed.height);
-			if (game->map.line[j][i] == PLAYER)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->player_right.xpm_ptr, i * game->player_right.width, j * game->player_right.height);
-			if (game->map.line[j][i] == TRAP)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, game->trap.xpm_ptr, i * game->trap.width, j * game->trap.height);	
-			i++;
-		}
-		i = 0; 
-		j++;
-	}
+	sprite.xpm_ptr = mlx_xpm_file_to_image(mlx, path, &sprite.x, &sprite.y);
+	//if (sprite.ptr == NULL)
+	//	ft_ft_error_msg(game, RED"ERROR: "GREY"read xpm\n"RESET);
+	return (sprite);
 }
 
-void init_game(t_game *game)
+void ft_render_sprite(t_game *game, t_image sprite, int column, int line)
+{
+	mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
+	sprite.xpm_ptr, column * sprite.x, line * sprite.y);
+}
+
+int ft_render_map(t_game game)
+{
+	int column;
+	int line;
+
+	column = 0;
+	line = 0;
+	while (line < game.map.lines)
+	{
+		while (column < game.map.columns)
+		{
+			if (game.map.line[line][column] == WALL)
+				ft_render_sprite (&game, game.wall, column, line);
+			if (game.map.line[line][column] == FLOOR)
+				ft_render_sprite (&game, game.floor, column, line);
+			if (game.map.line[line][column] == COINS)
+				ft_render_sprite (&game, game.coins, column, line);
+			if (game.map.line[line][column] == MAP_EXIT)
+				ft_render_sprite (&game, game.exit_closed, column, line);
+			if (game.map.line[line][column] == PLAYER)
+				ft_render_sprite (&game, game.player_right, column, line);
+			if (game.map.line[line][column] == TOXIC)
+				ft_render_sprite (&game, game.toxic, column, line);
+			if (game.map.line[line][column] == SPIKES)
+				ft_render_sprite (&game, game.spikes, column, line);	
+			column++;
+		}
+		column = 0; 
+		line++;
+	}
+	return (0);
+	//ft_print_movements(game);
+}
+
+void	ft_print_moves(t_game *game)
+{
+	//
+}
+
+void ft_init_mlx(t_game *game)
 {
 	game->mlx_ptr = mlx_init();
 	if (game->mlx_ptr == NULL)
-		error_msg("Couldn't find mlx pointer. Try it using a VNC.");
+		ft_error_msg("Couldn't find mlx pointer. Try it using a VNC.");
 	game->win_ptr = mlx_new_window(game->mlx_ptr, \
 	game->map.columns * 32, game->map.lines * 32, "so_long");
 	if (game->win_ptr == NULL)
-		error_msg("Couldn't create the Window.");
-	game->wall.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	WALL_XPM, &game->wall.width, &game->wall.height);
-	game->floor.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	FLOOR_XPM, &game->floor.width, &game->floor.height);
-	game->coins.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	COINS_XPM, &game->coins.width, &game->coins.height);
-	game->exit_closed.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	EXIT_CLOSED_XPM, &game->exit_closed.width, &game->exit_closed.height);
-	game->exit_open.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	OPEN_EXIT_XPM, &game->exit_open.width, &game->exit_open.height);
-	game->player_front.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	PLAYER_FRONT_XPM, &game->player_front.width, &game->player_front.height);
-	game->player_left.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	PLAYER_LEFT_XPM, &game->player_left.width, &game->player_left.height);
-	game->player_right.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	PLAYER_RIGHT_XPM, &game->player_right.width, &game->player_right.height);
-	game->player_back.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	PLAYER_BACK_XPM, &game->player_back.width, &game->player_back.height);
-	game->trap.xpm_ptr = mlx_xpm_file_to_image(game->mlx_ptr, \
-	TRAP_XPM, &game->trap.width, &game->trap.height);
+		ft_error_msg("Couldn't create the Window.");
+}
+
+void ft_init_sprites(t_game *game)
+{
+	void *mlx;
+
+	mlx = game->mlx_ptr;
+	game->wall = ft_new_sprite(mlx, WALL_XPM, game);
+	game->floor = ft_new_sprite(mlx, FLOOR_XPM, game);
+	game->coins = ft_new_sprite(mlx, COINS_XPM, game);
+	game->player_front = ft_new_sprite(mlx, PLAYER_FRONT_XPM, game);
+	game->player_left = ft_new_sprite(mlx, PLAYER_LEFT_XPM, game);
+	game->player_right = ft_new_sprite(mlx, PLAYER_RIGHT_XPM, game);
+	game->player_back = ft_new_sprite(mlx, PLAYER_BACK_XPM, game);
+	game->open_exit = ft_new_sprite(mlx, OPEN_EXIT_XPM, game);
+	game->exit_closed = ft_new_sprite(mlx, EXIT_CLOSED_XPM, game);
+	game->toxic = ft_new_sprite(mlx, TOXIC_XPM, game);
+	game->spikes = ft_new_sprite(mlx, SPIKES_XPM, game);
 }
 
 void print_assets(t_game *game, char c)
@@ -495,20 +522,54 @@ void print_assets(t_game *game, char c)
 	ft_printf("%c", c);
 }
 
+void ft_destroy_images(t_game *game)
+{
+	mlx_destroy_image(game->mlx_ptr, game->wall.xpm_ptr);
+	mlx_destroy_image(game->mlx_ptr, game->floor.xpm_ptr);
+	mlx_destroy_image(game->mlx_ptr, game->player_front.xpm_ptr);
+	mlx_destroy_image(game->mlx_ptr, game->player_left.xpm_ptr);
+	mlx_destroy_image(game->mlx_ptr, game->player_right.xpm_ptr);
+	mlx_destroy_image(game->mlx_ptr, game->player_back.xpm_ptr);
+	mlx_destroy_image(game->mlx_ptr, game->exit_closed.xpm_ptr);
+	mlx_destroy_image(game->mlx_ptr, game->open_exit.xpm_ptr);
+	mlx_destroy_image(game->mlx_ptr, game->spikes.xpm_ptr);
+	mlx_destroy_image(game->mlx_ptr, game->toxic.xpm_ptr);
+}
+
+void	ft_free_string_array(char **free_me)
+{
+	char	**free_me_too;
+
+	free_me_too = free_me;
+	while (free_me && *free_me)
+		free(*free_me++);
+	free(free_me_too);
+}
+
+void ft_free_all_allocated_memory(t_game *game)
+{
+	ft_destroy_images(game);
+	ft_free_string_array(game->map.line);
+	mlx_destroy_display(game->mlx_ptr);
+	free(game->mlx_ptr);
+	free(game);
+}
+
 int	main(int argc, char **argv)
 {
-	t_game	game;
-	int i;
+	t_game	*game;
 	
-	check_command_line_arguments(argc, argv);
-	init_vars(&game);
-	init_map(&game, argv[1]);
-	check_map(&game);
-	init_game(&game);
-	print_map(&game);
-	mlx_hook(game.win_ptr, 3, 1L << 1, handle_input, &game);
-	mlx_loop_hook(game.mlx_ptr, &handle_no_event, &game);
-	mlx_loop(game.mlx_ptr);
-	mlx_destroy_display(game.mlx_ptr);
-	free(game.mlx_ptr);
+	game = malloc(sizeof(t_game));
+	ft_check_command_line_arguments(argc, argv);
+	ft_init_vars(game);
+	ft_init_map(game, argv[1]);
+	ft_check_map(game);
+	ft_init_mlx(game);
+	ft_init_sprites(game);
+	ft_render_map(*game);
+	mlx_hook(game->win_ptr, 3, 1L << 1, ft_handle_input, game);
+	mlx_loop_hook(game->mlx_ptr, &ft_handle_no_event, game);
+	mlx_expose_hook(game->win_ptr, &ft_render_map, game);
+	mlx_loop(game->mlx_ptr);
+	ft_free_all_allocated_memory(game);
 }
