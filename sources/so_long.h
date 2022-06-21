@@ -118,6 +118,7 @@ void	ft_check_map_parameters(t_game *game);
 t_bool	ft_check_for_invalid_map_parameters(char *line);
 void	ft_init_mlx(t_game *game);
 void	ft_init_sprites(t_game *game);
+t_image	ft_new_sprite(void *mlx, char *path, t_game *game);
 
 size_t	ft_strlen_line(char *str);
 int	ft_count_line_occurrences(char *str, char c);
