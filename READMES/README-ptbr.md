@@ -46,7 +46,24 @@ A Norma é um padrão de programação que define um conjunto de regras a seguir
     
 Você só vai conseguir jogar uma vez que tenha instalado os recursos da <a href="https://github.com/42Paris/minilibx-linux">MiniLibx</a> ou que esteja usando
 uma das máquinas da 42.
-    
+ 
+
+Para jogar, primeiro compile o projeto com make
+
+	make
+	
+Ou caso queira jogar a versão com bônus:
+
+	make bonus
+	
+Então, execute o ./so_long seguido do mapa que você quer jogar:
+	
+	./so_long assets/maps/valid/map2.ber	
+
+Para o bônus seria:
+	
+	./so_long_bonus assets/maps/valid/map2.ber
+	
 <h3 align="center"> Mapa </h3>   
 Qualquer mapa que você passar pode servir de input para o jogo, isso se respeitar as regras abaixo:
 
@@ -62,26 +79,27 @@ E só pode conter os seguintes caracteres:
 | P         |   Jogador  |      
 | 0         |   Piso     |
     
-E para o bônus coloquei novos parâmetros, que te fazem perder uma vez que tente passar por cima:
+E para o bônus coloquei um novo parâmetrs, que te faz perder uma vez que tente passar por cima:
     
 | CARACTERE |	OBJETO   |
 | --------- | ---------- |
 | T         |   Poça Tóxica  |
-| S         |   Espinhos   |
 
     
 O mapa deve ser retangular e cercado de paredes '1'.
 
 Deve conter pelo menos uma saída 'E', um coletável 'C' e apenas um jogador 'P'.
     
-Pode conferir alguns exemplos na pasta /assets/maps desse projeto:
+Pode conferir alguns exemplos na pasta /assets/maps desse projeto. 
+	
+Como assets/maps/valid/map2.ber:
 
 <img src="https://user-images.githubusercontent.com/81205527/163024984-1ff511c1-17d2-4eef-8d97-90cc8a884c73.png">
 Esse arquivo .ber gera esse mapa:
     
     
 <img src="https://user-images.githubusercontent.com/81205527/174420150-0ee15e42-c7c3-4854-936b-fffaf13683c2.png">
-    
+	
 <h3 align="center"> Controles </h3>   
     
 | TECLA |	OBJETO   |
