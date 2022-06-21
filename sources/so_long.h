@@ -6,25 +6,18 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/03/22 13:53:38 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/06/20 16:36:58 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/06/21 01:06:58 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SO_LONG_H
 # define SO_LONG_H
 
-#include <stdio.h>
 #include <unistd.h>
-#include <stdlib.h>
+#include <fcntl.h>
 #include <mlx.h>
 #include <X11/X.h>
 #include <X11/keysym.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <errno.h>
 #include "../libraries/Libft/libft.h"
 
 # define GREEN			"\033[0;32m"
