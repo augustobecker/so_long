@@ -5,6 +5,7 @@
 <p align="center"><a href="https://github.com/augustobecker/SoLong/blob/main/READMES/README-ptbr.md" target="_blank"><img src="https://img.shields.io/badge/dispon%C3%ADvel%20tamb%C3%A9m%20em-PT--BR-yellow"></a></p>
 <p align="center"><img src="https://user-images.githubusercontent.com/81205527/174392536-21619238-638a-4173-a77c-1b168c6c7898.png"> </p>
 
+<p align="center">:magic_wand: Everything small is just a smaller version of something big</p>
 
 ## Index
 * [What is so_long?](#what-is-so_long)
