@@ -6,7 +6,7 @@
 #    By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/01 14:28:59 by acesar-l          #+#    #+#              #
-#    Updated: 2022/04/04 20:08:59 by acesar-l         ###   ########.fr        #
+#    Updated: 2022/06/25 14:58:59 by acesar-l         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,8 +40,11 @@ SOURCES		= 	sources/so_long.c				\
 			sources/init_vars.c				\
 			sources/set_start_position.c			\
 			sources/strlen_line.c
+BONUS_SOURCES	=
 
-OBJECTS		= $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
+OBJECTS		= $(addprefix $(OBJ_DIR)/, $(SOURCES:.c=.o))
+
+BONUS_OBJECTS	= $(addprefix $(BONUS_OBJ_DIR)/, $(BONUS_SOURCES:.c=.o))
 
 ${LIBFT}:
 		make bonus -C ${LIBFT_PATH}
@@ -54,6 +57,9 @@ ${NAME}:	${LIBFT} $(OBJ_DIR) ${OBJECTS}
 		@echo "$(NAME): $(GREEN)${NAME} was created$(RESET)"
 		${CC} -o ${NAME} ${SOURCES} ${LIBFT} ${STANDARD_FLAGS} ${MINILIBX_FLAGS}
 		@echo
+
+bonus:
+		${LIBFT} $(BONUS_OBJ_DIR) ${BONUS_OBJECTS}
 
 clean:
 		make clean -C ${LIBFT_PATH}
@@ -72,4 +78,6 @@ fclean:
 
 re:		fclean all
 
-.PHONY:		all clean fclean re
+rebonus:	fclean bonus
+
+.PHONY:		all bonus clean fclean re rebonus
