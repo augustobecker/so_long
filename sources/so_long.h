@@ -124,4 +124,10 @@ size_t	ft_strlen_line(char *str);
 int	ft_count_line_occurrences(char *str, char c);
 void	ft_set_start_position(t_game *game, char *line, int y);
 
+void	ft_check_map(t_game *game);
+void	ft_check_rows(t_game *game);
+void	ft_check_columns(t_game *game);
+void	ft_count_map_parameters(t_game *game);
+void	ft_verify_map_parameters(t_game *game);
+
 #endif
