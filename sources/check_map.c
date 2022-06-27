@@ -59,7 +59,7 @@ void	ft_count_map_parameters(t_game *game)
 	i = 0;
 	while (i < game->map.rows)
 	{
-		if (ft_strchr("01WEP", game->map.full[i]) == false)
+		if (ft_strchr("CEP01", game->map.full[i]))
 			ft_error_msg("Invalid Map. Not expected map parameter");
 		game->map.coins += line_occurrences(game->map.full[i], COINS);
 		game->map.exit += line_occurrences(game->map.full[i], MAP_EXIT);
