@@ -6,41 +6,70 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/01 19:36:24 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/04/01 19:42:17 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/06/28 17:00:05 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-void render_map(t_game *game)
-{
-	int line;
-	int column;
+int	ft_render_map(t_game game);
+void	ft_identify_sprite(t_game *game, char parameter, int x, int y);
+void	ft_render_player(t_game *game, t_image sprite, int x, int y);
+void	ft_render_sprite(t_game *game, t_image sprite, int column, int line);
 
-	line = 0;
-	column = 0;
-	while (line < game->map.nbr_lines)
+int	ft_render_map(t_game game)
+{
+	int	x;
+	int	y;
+
+	x = 0;
+	y = 0;
+	while (y < game.map.rows)
 	{
-		while (column < game->map.line_len)
+		while (x < game.map.columns)
 		{
-			if (game->map.line[ line][column] == WALL)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
-				game->wall.xpm_ptr, column * game->wall.width,  line * game->wall.height);
-			if (game->map.line[ line][column] == FLOOR)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
-				game->floor.xpm_ptr, column * game->floor.width,  line * game->floor.height);
-			if (game->map.line[ line][column] == COINS)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
-				game->coins.xpm_ptr, column * game->coins.width,  line * game->coins.height);
-			if (game->map.line[ line][column] == MAP_EXIT)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
-				game->exit.xpm_ptr, column * game->exit.width,  line * game->exit.height);
-			if (game->map.line[line][column] == PLAYER)
-				mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
-				game->player_one.xpm_ptr, column * game->player_one.width,  line * game->player_one.height);
+			ft_identify_sprite(&game, game.map.full[y][x], y, x);
 			column++;
 		}
-		column = 0; 
-		line++;
+		x = 0;
+		y++;
 	}
+	return (0);
+}
+
+void	ft_identify_sprite(t_game *game, char parameter, int x, int y)
+{
+	if (parameter == WALL)
+		ft_render_sprite (game, game->wall, x, y);
+	else if (parameter == FLOOR)
+		ft_render_sprite (game, game->floor, x, y);
+	else if (parameter == COINS)
+		ft_render_sprite (game, game->coins, x, y);
+	else if (parameter == MAP_EXIT)
+	{
+		if (game->map.coins == 0)
+			ft_render_sprite (game, game->open_exit, x, y);
+		else
+			ft_render_sprite (game, game->exit_closed, x, y);
+	}
+	else if (parameter == PLAYER)
+		ft_render_player (game, x, y);
+}
+
+void	ft_render_player(t_game *game, int x, int y)
+{
+	if (game->player_sprite = FRONT)
+		ft_render_sprite (game, game->player_front, x, y);
+	else if (game->player_sprite = LEFT)
+		ft_render_sprite (game, game->player_left, x, y);
+	else if (game->player_sprite = RIGHT)
+		ft_render_sprite (game, game->player_right, x, y);
+	else if (game->player_sprite = BACK)]
+		ft_render_sprite (game, game->player_back, x, y);
+}
+
+void	ft_render_sprite(t_game *game, t_image sprite, int column, int line)
+{
+	mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
+	sprite.xpm_ptr, column * sprite.x, line * sprite.y);
 }
