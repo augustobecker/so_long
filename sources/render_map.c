@@ -29,7 +29,7 @@ int	ft_render_map(t_game game)
 		while (x < game.map.columns)
 		{
 			ft_identify_sprite(&game, game.map.full[y][x], y, x);
-			column++;
+			x++;
 		}
 		x = 0;
 		y++;
