@@ -59,13 +59,13 @@ void	ft_identify_sprite(t_game *game, char parameter, int x, int y)
 
 void	ft_render_player(t_game *game, int x, int y)
 {
-	if (game->player_sprite = FRONT)
+	if (game->player_sprite == FRONT)
 		ft_render_sprite (game, game->player_front, x, y);
-	else if (game->player_sprite = LEFT)
+	else if (game->player_sprite == LEFT)
 		ft_render_sprite (game, game->player_left, x, y);
-	else if (game->player_sprite = RIGHT)
+	else if (game->player_sprite == RIGHT)
 		ft_render_sprite (game, game->player_right, x, y);
-	else if (game->player_sprite = BACK)]
+	else if (game->player_sprite == BACK)]
 		ft_render_sprite (game, game->player_back, x, y);
 }
 
