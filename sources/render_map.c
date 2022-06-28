@@ -34,6 +34,7 @@ int	ft_render_map(t_game game)
 		x = 0;
 		y++;
 	}
+	ft_print_movements(game, game->movements);
 	return (0);
 }
 
