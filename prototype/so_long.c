@@ -6,7 +6,7 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 17:04:37 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/06/30 16:09:56 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/07/01 07:25:57 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ typedef struct s_image
 
 typedef struct s_map
 {
+	char		*complete;
 	char		**full;
 	int			rows;
 	int			columns;
@@ -110,7 +111,7 @@ typedef struct s_game
 
 void	ft_check_command_line_arguments(int argc, char **argv);
 void	ft_init_map(t_game *game, char *argv);
-void	ft_check_for_empty_line(t_game *game, char **map);
+t_bool	ft_check_for_empty_line(char *map);
 void	ft_init_vars(t_game *game);
 void	ft_check_map(t_game *game);
 void	ft_check_rows(t_game *game);
@@ -138,6 +139,9 @@ int		exit_click(t_game *game);
 void	ft_free_all_allocated_memory(t_game *game);
 void	ft_destroy_images(t_game *game);
 void	ft_free_string(char **free_str);
+void	ft_free_map(t_game *game);
+
+char	*ft_strappend(char **s1, const char *s2);
 
 int main(int argc, char	**argv)
 {
@@ -151,8 +155,8 @@ int main(int argc, char	**argv)
 	ft_init_sprites(&game);
 	ft_render_map(game);
 	mlx_hook(game.win_ptr, 3, 1L << 1, ft_handle_input, &game);
-	mlx_hook(game.win_ptr, 12, 1L << 15, ft_render_map, &game);
 	mlx_hook(game.win_ptr, 17, 0L, exit_click, &game);
+	mlx_expose_hook(game.win_ptr, ft_render_map, &game);
 	mlx_loop(game.mlx_ptr);
 }
 
@@ -185,39 +189,36 @@ void	ft_init_map(t_game *game, char *argv)
 		line_temp = get_next_line(map_fd);
 		if (line_temp == NULL)
 			break ;
-		map_temp = ft_strjoin(map_temp, line_temp);
+		map_temp = ft_strappend(&map_temp, line_temp);
 		free(line_temp);
 		game->map.rows++;
 	}
 	close(map_fd);
-	ft_check_for_empty_line(game, &map_temp);
+	if (ft_check_for_empty_line(map_temp) == true)
+	{
+		free(map_temp);
+		ft_error_msg("Invalid map. The map have an empty line.");
+	}
 	game->map.full = ft_split(map_temp, '\n');
 	free(map_temp);
 }
 
-void ft_check_for_empty_line(t_game *game, char **map)
+t_bool ft_check_for_empty_line(char *map)
 {
 	int i;
 	
-	i = 0;
-	if (*map[0] == '\n')
+	i = 1;
+	if (map[0] == '\n')
+		return (true);
+	if (map[ft_strlen(map)] - 1 == '\n')
+		return (true);
+	while (map[i])
 	{
-		free(*map);
-		ft_error_msg("Invalid map. The map have an empty line \
-right at the beginnin");
-	}
-	if (*map[ft_strlen(*map)] - 1 == '\n')
-	{
-		free(*map);
-		ft_error_msg("Invalid map. The map have an empty line \
-right at the end");
-	}
-	while (*map[i])
-	{
-		if (*map[i] == '\n' && *map[i + 1] == '\n')
-			ft_error_msg("Invalid map. The map have an empty line.");
+		if (map[i - 1] == '\n' && map[i] == '\n')
+			return (true);
 		i++;	
 	}
+	return (false);
 }
 
 void	ft_init_vars(t_game *game)
@@ -372,7 +373,10 @@ t_image	ft_new_sprite(void *mlx, char *path, t_game *game)
 
 	sprite.xpm_ptr = mlx_xpm_file_to_image(mlx, path, &sprite.x, &sprite.y);
 	if (sprite.xpm_ptr == NULL)
+	{
+		ft_free_map(game);
 		ft_error_msg("Couldn't find a sprite. Does it exist?");
+	}
 	return (sprite);
 }
 
@@ -499,7 +503,7 @@ int ft_error_msg(char *message)
 
 int	ft_close_game(t_game *game)
 {
-	ft_printf(GREY"%s\n"RESET, "CLOSED");
+	ft_printf(GREY"%s\n%d"RESET, "CLOSED", game->movements);
 	exit (EXIT_FAILURE);
 }
 
@@ -537,6 +541,7 @@ void ft_destroy_images(t_game *game)
 {
 	mlx_destroy_image(game->mlx_ptr, game->wall.xpm_ptr);
 	mlx_destroy_image(game->mlx_ptr, game->floor.xpm_ptr);
+	mlx_destroy_image(game->mlx_ptr, game->coins.xpm_ptr);
 	mlx_destroy_image(game->mlx_ptr, game->player_front.xpm_ptr);
 	mlx_destroy_image(game->mlx_ptr, game->player_left.xpm_ptr);
 	mlx_destroy_image(game->mlx_ptr, game->player_right.xpm_ptr);
@@ -561,6 +566,20 @@ void ft_free_all_allocated_memory(t_game *game)
 	ft_free_map(game);
 	mlx_destroy_window(game->mlx_ptr, game->win_ptr);
 	mlx_destroy_display(game->mlx_ptr);
-	free(game->win_ptr);
 	free(game->mlx_ptr);
+}
+
+char	*ft_strappend(char **s1, const char *s2)
+{
+	char	*str;
+
+	if (!*s1 || !s2)
+		return (NULL);
+	str = (char *)ft_calloc((ft_strlen(*s1) + ft_strlen(s2)) + 1, sizeof(char));
+	if (!str)
+		return (NULL);
+	ft_strlcpy(str, *s1, ft_strlen(*s1) + 1);
+	ft_strlcat(str, s2, ft_strlen(*s1) + ft_strlen(s2) + 1);
+	free(*s1);
+	return (str);
 }
