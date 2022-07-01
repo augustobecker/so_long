@@ -6,7 +6,7 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/07 16:33:22 by acesar-l          #+#    #+#             */
-/*   Updated: 2021/09/15 21:51:11 by acesar-l         ###   ########.fr       */
+/*   Updated: 2021/07/01 01:01:11 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,5 +23,6 @@ char	*ft_strjoin(const char *s1, const char *s2)
 		return (NULL);
 	ft_strlcpy(str, s1, ft_strlen(s1) + 1);
 	ft_strlcat(str, s2, ft_strlen(s1) + ft_strlen(s2) + 1);
+	free((char *)s1);
 	return (str);
 }
