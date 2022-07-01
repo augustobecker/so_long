@@ -6,7 +6,7 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 17:04:37 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/07/01 07:25:57 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/07/01 18:11:38 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,7 +135,7 @@ int		ft_close_game(t_game *game);
 void	ft_print_movements(t_game *game);
 int		ft_victory(t_game *game);
 int		exit_click(t_game *game);
-
+int		handle_no_event(void);
 void	ft_free_all_allocated_memory(t_game *game);
 void	ft_destroy_images(t_game *game);
 void	ft_free_string(char **free_str);
@@ -154,8 +154,10 @@ int main(int argc, char	**argv)
 	ft_init_mlx(&game);
 	ft_init_sprites(&game);
 	ft_render_map(game);
-	mlx_hook(game.win_ptr, 3, 1L << 1, ft_handle_input, &game);
-	mlx_hook(game.win_ptr, 17, 0L, exit_click, &game);
+
+	mlx_hook(game.win_ptr, KeyPress, KeyPressMask, ft_handle_input, &game);
+	mlx_hook(game.win_ptr, DestroyNotify, NoEventMask, exit_click, &game);
+	mlx_loop_hook(game.mlx_ptr, handle_no_event, &game);
 	mlx_expose_hook(game.win_ptr, ft_render_map, &game);
 	mlx_loop(game.mlx_ptr);
 }
@@ -567,6 +569,11 @@ void ft_free_all_allocated_memory(t_game *game)
 	mlx_destroy_window(game->mlx_ptr, game->win_ptr);
 	mlx_destroy_display(game->mlx_ptr);
 	free(game->mlx_ptr);
+}
+
+int	handle_no_event(void)
+{
+	return (0);
 }
 
 char	*ft_strappend(char **s1, const char *s2)
