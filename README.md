@@ -18,6 +18,10 @@
 <h2 align="center" id="what-is-so_long"> What is so_long? </h2>
 
 The fifth project at 42 programming school.
+It's the first graphical project in the <a href="https://github.com/augustobecker/42cursus">Cursus </a>, we can choose between 3 options - FdF, Fractol and so_long - that in general
+cover different areas, but all 3 are graphical projects. The so_long consists of a top-down game, which we code from scratch using
+the MiniLibx graphical library. It involves a series of validations from the map that is passed as argument,
+checks to prevent memoy leaks, the game engineering, managing windows, events, sprites and maps.
 	
 <h2 align="center" id="requirements"> Requirements </h2>
 
