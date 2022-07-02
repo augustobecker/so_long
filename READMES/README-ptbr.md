@@ -11,6 +11,8 @@
 * [O que é so_long?](#o-que-e-so_long)
 * [Requisitos](#requisitos)
 * [Como funciona?](#como-funciona)
+	* [Mapas](#mapas)
+	* [Controles](#controles)
 * [Como eu testo?](#como-eu-testo)
 * [42 Cursus](#42-cursus)
 * [Autor](#autor)
@@ -64,7 +66,7 @@ Para o bônus seria:
 	
 	./so_long_bonus assets/maps/valid/map2.ber
 	
-<h3 align="center"> Mapa </h3>   
+<h3 id="mapas" align="center"> Mapas </h3>   
 Qualquer mapa que você passar pode servir de input para o jogo, isso se respeitar as regras abaixo:
 
 O mapa precisa ser um arquivo .ber
@@ -100,7 +102,7 @@ Esse arquivo .ber gera esse mapa:
     
 <img src="https://user-images.githubusercontent.com/81205527/174420150-0ee15e42-c7c3-4854-936b-fffaf13683c2.png">
 	
-<h3 align="center"> Controles </h3>   
+<h3 id="controles" align="center"> Controles </h3>   
     
 | TECLA |	OBJETO   |
 | --------- | ---------- |
