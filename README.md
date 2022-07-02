@@ -11,6 +11,8 @@
 * [What is so_long?](#what-is-so_long)
 * [Requirements](#requirements)
 * [How does it work?](#how-does-it-work)
+	* [Maps](#maps)	
+	* [Controls](#controls)
 * [How do I test it?](#how-do-i-test-it)
 * [42 Cursus](#42-cursus)
 * [Author](#author)
@@ -45,6 +47,79 @@ to any project where it's specified. These are some of them:
     
 <h2 align="center" id="how-does-it-work"> How does it work? </h2>
 
+You'll be able to play once you install the <a href="https://github.com/42Paris/minilibx-linux">MiniLibx</a> features or if you're using one of the machines at 42.
+
+To play, first compile the project with make:
+
+	make
+	
+In case you wanna play the bonus version:
+
+	make bonus
+	
+So, run ./so_long followed by the map:
+	
+	./so_long assets/maps/valid/map2.ber	
+
+For bonus:
+	
+	./so_long_bonus assets/maps/valid/map2.ber
+	
+<h3 id="maps" align="center"> Maps </h3>   
+You can parse any kind of map, as long as it respects the below rules:
+
+The map must be a .ber file.
+
+And can only contain these characters:
+    
+| CHAR |	OBJECT   |
+| --------- | ---------- |
+| 1         |   Wall   |
+| C	        | Coin |
+| E	        |   Exit  |
+| P         |   Player  |      
+| 0         |   Floor     |
+    
+For bonus there's an extra character - which makes you lose once touch it.
+    
+| CHAR |	OBJECT   |
+| --------- | ---------- |
+| T         |   Toxic River  |
+
+
+The map must be rectangular and surrounded by walls '1'.
+
+The map must contain at least one exit, one collectible, and one starting position.
+
+Check some examples in the folder /assets/maps.
+	
+As in assets/maps/valid/map2.ber:
+
+<img src="https://user-images.githubusercontent.com/81205527/163024984-1ff511c1-17d2-4eef-8d97-90cc8a884c73.png">
+This .ber file generates this map:
+    
+    
+<img src="https://user-images.githubusercontent.com/81205527/174420150-0ee15e42-c7c3-4854-936b-fffaf13683c2.png">
+	
+<h3 id="controls" align="center"> Controls </h3>   
+    
+| KEY |	OBJECT   |
+| --------- | ---------- |
+| W or ⬆️        |    Move up   |
+| A	or ⬅️        |    Move left |
+| S	or ⬇️     |    Move down   |
+| D or ➡️       |   Move para right|      
+| Q or Esc      |   Close the game     | 
+    
+    
+Use WASD or arrow keys to move.
+	
+You can only move one block at a time.
+	
+After getting all the coin bags, the exit opens and you can escape downstairs.
+	
+You can close the game by Clicking on the red cross on the window’s frame, or pressing Q or Esc.
+	
 <h2 align="center" id="how-do-i-test-it"> How do I test it? </h2>  
 
 <h2 align="center" id="42-cursus"> 42 Cursus </h2>
