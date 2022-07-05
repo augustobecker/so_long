@@ -6,7 +6,7 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 17:04:37 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/07/01 18:11:38 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/07/02 17:32:18 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <mlx.h>
 #include <X11/X.h>
 #include <X11/keysym.h>
-#include "../libraries/Libft/libft.h"
+#include "..//Libft/libft.h"
 
 # define IMG_HEIGHT			32
 # define IMG_WIDTH			32
@@ -145,21 +145,21 @@ char	*ft_strappend(char **s1, const char *s2);
 
 int main(int argc, char	**argv)
 {
-	t_game	game;
+	t_game	*game;
 	
+	game = malloc(sizeof(t_game));
 	ft_check_command_line_arguments(argc, argv);
-	ft_init_map(&game, argv[1]);
-	ft_init_vars(&game);
-	ft_check_map(&game);
-	ft_init_mlx(&game);
-	ft_init_sprites(&game);
-	ft_render_map(game);
-
-	mlx_hook(game.win_ptr, KeyPress, KeyPressMask, ft_handle_input, &game);
-	mlx_hook(game.win_ptr, DestroyNotify, NoEventMask, exit_click, &game);
-	mlx_loop_hook(game.mlx_ptr, handle_no_event, &game);
-	mlx_expose_hook(game.win_ptr, ft_render_map, &game);
-	mlx_loop(game.mlx_ptr);
+	ft_init_map(game, argv[1]);
+	ft_init_vars(game);
+	ft_check_map(game);
+	ft_init_mlx(game);
+	ft_init_sprites(game);
+	ft_render_map(*game);
+	mlx_hook(game->win_ptr, 12, 1L << 15, ft_render_map, game);
+	mlx_hook(game->win_ptr, 3, 1L << 1, ft_handle_input, game);
+	mlx_hook(game->win_ptr, 17, 0L, exit_click, game);
+	mlx_loop(game->mlx_ptr);
+	ft_free_all_allocated_memory(game);
 }
 
 void	ft_check_command_line_arguments(int argc, char **argv)
@@ -386,18 +386,18 @@ void	ft_identify_sprite(t_game *game, char parameter, int y, int x)
 {
 	if (parameter == WALL)
 		ft_render_sprite (game, game->wall, y, x);
-	else if (parameter == FLOOR)
+	if (parameter == FLOOR)
 		ft_render_sprite (game, game->floor, y, x);
-	else if (parameter == COINS)
+	if (parameter == COINS)
 		ft_render_sprite (game, game->coins, y, x);
-	else if (parameter == MAP_EXIT)
+	if (parameter == MAP_EXIT)
 	{
 		if (game->map.coins == 0)
 			ft_render_sprite (game, game->open_exit, y, x);
 		else
 			ft_render_sprite (game, game->exit_closed, y, x);
 	}
-	else if (parameter == PLAYER)
+	if (parameter == PLAYER)
 		ft_render_player (game, y, x);
 }
 
@@ -405,11 +405,11 @@ void	ft_render_player(t_game *game, int y, int x)
 {
 	if (game->player_sprite == FRONT)
 		ft_render_sprite (game, game->player_front, y, x);
-	else if (game->player_sprite == LEFT)
+	if (game->player_sprite == LEFT)
 		ft_render_sprite (game, game->player_left, y, x);
-	else if (game->player_sprite == RIGHT)
+	if (game->player_sprite == RIGHT)
 		ft_render_sprite (game, game->player_right, y, x);
-	else if (game->player_sprite == BACK)
+	if (game->player_sprite == BACK)
 		ft_render_sprite (game, game->player_back, y, x);
 }
 
@@ -569,6 +569,7 @@ void ft_free_all_allocated_memory(t_game *game)
 	mlx_destroy_window(game->mlx_ptr, game->win_ptr);
 	mlx_destroy_display(game->mlx_ptr);
 	free(game->mlx_ptr);
+	free(game);
 }
 
 int	handle_no_event(void)
