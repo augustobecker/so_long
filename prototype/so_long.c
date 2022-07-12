@@ -286,10 +286,10 @@ void	ft_count_map_parameters(t_game *game)
 	int	x;
 	int y;
 
-	x = 0;
 	y = 0;
 	while (y < game->map.rows)
 	{
+		x = 0;
 		while (x < game->map.columns)
 		{
 			if (!ft_strchr("CEP01", game->map.full[y][x]))
@@ -306,7 +306,6 @@ void	ft_count_map_parameters(t_game *game)
 				game->map.exit++;
 			x++;
 		}
-		x = 0;
 		y++;
 	}
 }
