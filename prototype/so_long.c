@@ -250,11 +250,11 @@ void	ft_check_rows(t_game *game)
 	{
 		if ((int) ft_strlen(game->map.full[i]) != game->map.columns)
 			ft_error_msg("Invalid Map. The Map must be rectangular!");
-		if (game->map.full[0][i] != WALL)
+		if (game->map.full[i][0] != WALL)
 			ft_error_msg("Invalid Map. \
 There's a Wall missing from the first row. \
 The Map must be surrounded by walls!.");
-		if (game->map.full[game->map.rows - 1][i] != WALL)
+		if (game->map.full[i][game->map.columns - 1] != WALL)
 			ft_error_msg("Invalid Map. \
 There's a Wall missing from the last row. \
 The Map must be surrounded by walls!.");
@@ -271,12 +271,12 @@ void	ft_check_columns(t_game *game)
 	{
 		if (game->map.full[0][i] != WALL)
 			ft_error_msg("Invalid Map. \
-			There's a Wall missing from the first column. \
-			The Map must be surrounded by walls!.");
+There's a Wall missing from the first column. \
+The Map must be surrounded by walls!.");
 		if (game->map.full[game->map.rows - 1][i] != WALL)
 			ft_error_msg("Invalid Map. \
-			There's a Wall missing from the last column. \
-			The Map must be surrounded by walls!.");
+There's a Wall missing from the last column. \
+The Map must be surrounded by walls!.");
 		i++;
 	}
 }
@@ -334,7 +334,6 @@ int	ft_render_map(t_game game)
 		while (x < game.map.columns)
 		{
 			ft_identify_sprite(&game, game.map.full[y][x], y, x);
-			ft_printf("%c", game.map.full[y][x]);
 			x++;
 		}
 		y++;
