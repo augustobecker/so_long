@@ -114,7 +114,6 @@ This .ber file generates this map:
     
 Use WASD or arrow keys to move.
 	
-You can only move one block at a time.
 	
 After getting all the coin bags, the exit opens and you can escape downstairs.
 	
