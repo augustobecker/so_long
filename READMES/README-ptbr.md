@@ -113,9 +113,9 @@ Esse arquivo .ber gera esse mapa:
 | Q ou Esc      |   Fecha o jogo     | 
     
     
-Use WASD ou as setas para se mover. Você só pode se mover um bloco por vez.
+Use WASD ou as setas para se mover.
 
-Após pegar todos os sacos de dinheiro, a saída se abre e você pode escapar pela escada. Além disso você pode conferir o número de movimentos que precisou para completar o jogo.
+Após pegar todos os sacos de dinheiro, a saída se abre e você pode escapar pela escada.
 
 Pode fechar o jogo clicando no X no topo direito da janela, ou ainda pressionando Q ou Esc.
   
