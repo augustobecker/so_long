@@ -6,7 +6,8 @@
 <p align="center"><a href="https://github.com/augustobecker/SoLong/blob/main/README.md" target="_blank"><img src="https://img.shields.io/badge/available%20in-EN-blue"></a></p>
 <p align="center"><img src="https://user-images.githubusercontent.com/81205527/174392536-21619238-638a-4173-a77c-1b168c6c7898.png"> </p>
 
-
+<p align="center">:magic_wand: Tudo que é pequeno é uma versão menor de algo grande</p>
+	
 ## Index
 * [O que é so_long?](#o-que-e-so_long)
 * [Requisitos](#requisitos)
