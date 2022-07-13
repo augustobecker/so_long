@@ -6,7 +6,7 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 17:04:37 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/07/11 14:47:41 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/07/13 22:28:37 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ typedef struct s_image
 
 typedef struct s_map
 {
-	char		*complete;
 	char		**full;
 	int			rows;
 	int			columns;
@@ -97,6 +96,7 @@ typedef struct s_game
 	int 		movements;
 	int			player_sprite;
 	t_map		map;
+	t_bool		map_alloc;
 	t_image		wall;
 	t_image		floor;
 	t_image		coins;
@@ -109,7 +109,7 @@ typedef struct s_game
 	t_image		toxic;
 }	t_game;
 
-void	ft_check_command_line_arguments(int argc, char **argv);
+void	ft_check_command_line_arguments(int argc, char **argv, t_game *game);
 void	ft_init_map(t_game *game, char *argv);
 t_bool	ft_check_for_empty_line(char *map);
 void	ft_init_vars(t_game *game);
@@ -121,7 +121,8 @@ void	ft_verify_map_parameters(t_game *game);
 void	ft_init_mlx(t_game *game);
 void	ft_init_sprites(t_game *game);
 t_image	ft_new_sprite(void *mlx, char *path, t_game *game);
-int		ft_render_map(t_game game);
+void	ft_render_map(t_game *game);
+int		ft_redraw_map(t_game game);
 
 void	ft_identify_sprite(t_game *game, char parameter, int x, int y);
 void	ft_render_player(t_game *game, int x, int y);
@@ -129,7 +130,7 @@ void	ft_render_sprite(t_game *game, t_image sprite, int column, int line);
 int		ft_handle_input(int keysym, t_game *game);
 void	ft_player_move(t_game *game, int x, int y, int player_sprite);
 
-int		ft_error_msg(char *message);
+int		ft_error_msg(char *message, t_game *game);
 
 int		ft_close_game(t_game *game);
 void	ft_print_movements(t_game *game);
@@ -148,31 +149,33 @@ int main(int argc, char	**argv)
 	t_game	*game;
 	
 	game = malloc(sizeof(t_game));
-	ft_check_command_line_arguments(argc, argv);
+	ft_check_command_line_arguments(argc, argv, game);
 	ft_init_map(game, argv[1]);
 	ft_init_vars(game);
 	ft_check_map(game);
 	ft_init_mlx(game);
 	ft_init_sprites(game);
-	ft_render_map(*game);
+	ft_render_map(game); //Leaks ok
 	mlx_hook(game->win_ptr, KeyPress, KeyPressMask, ft_handle_input, game);
 	mlx_hook(game->win_ptr, DestroyNotify, NoEventMask, exit_click, game);
-	mlx_hook(game->win_ptr, Expose, NoEventMask, ft_render_map, game);
+	mlx_loop_hook(game->mlx_ptr, &ft_handle_no_event, game);
+	mlx_expose_hook(game->win_ptr, &ft_redraw_map, game);
 	mlx_loop(game->mlx_ptr);
 	ft_free_all_allocated_memory(game);
 }
 
-void	ft_check_command_line_arguments(int argc, char **argv)
+void	ft_check_command_line_arguments(int argc, char **argv, t_game *game)
 {
 	int	map_parameter_len;
 
+	game->map_alloc = false;
 	if (argc > 2)
-		ft_error_msg("Too many arguments (It should be only two).");
+		ft_error_msg("Too many arguments (It should be only two).", game); 		
 	if (argc < 2)
-		ft_error_msg("The Map file is missing.");
+		ft_error_msg("The Map file is missing.", game);
 	map_parameter_len = ft_strlen(argv[1]);
-	if (!ft_strnstr(&argv[1][map_parameter_len - 4], ".ber", 4))
-		ft_error_msg("Map file extention is wrong (It should be .ber).");
+	if (!ft_strnstr(&argv[1][map_parameter_len - 4], ".ber", 4))			
+		ft_error_msg("Map file extention is wrong (It should be .ber).", game);
 }
 
 void	ft_init_map(t_game *game, char *argv)
@@ -183,7 +186,7 @@ void	ft_init_map(t_game *game, char *argv)
 
 	map_fd = open(argv, O_RDONLY);
 	if (map_fd == -1)
-		ft_error_msg("The Map couldn't be opened. Does the Map exist?");
+		ft_error_msg("The Map couldn't be opened. Does the Map exist?", game);
 	map_temp = ft_strdup("");
 	game->map.rows = 0;
 	while (true)
@@ -195,12 +198,10 @@ void	ft_init_map(t_game *game, char *argv)
 		free(line_temp);
 		game->map.rows++;
 	}
+	game->map_alloc = true;
 	close(map_fd);
 	if (ft_check_for_empty_line(map_temp) == true)
-	{
-		free(map_temp);
-		ft_error_msg("Invalid map. The map have an empty line.");
-	}
+		ft_error_msg("Invalid map. The map have an empty line.", game);				
 	game->map.full = ft_split(map_temp, '\n');
 	free(map_temp);
 }
@@ -211,13 +212,22 @@ t_bool ft_check_for_empty_line(char *map)
 	
 	i = 1;
 	if (map[0] == '\n')
+	{
+		free(map);
 		return (true);
-	if (map[ft_strlen(map)] - 1 == '\n')
+	}
+	else if (map[ft_strlen(map)] - 1 == '\n')
+	{
+		free(map);
 		return (true);
+	}
 	while (map[i])
 	{
 		if (map[i - 1] == '\n' && map[i] == '\n')
+		{
+			free(map);
 			return (true);
+		}
 		i++;	
 	}
 	return (false);
@@ -249,15 +259,15 @@ void	ft_check_rows(t_game *game)
 	while (i < game->map.rows)
 	{
 		if ((int) ft_strlen(game->map.full[i]) != game->map.columns)
-			ft_error_msg("Invalid Map. The Map must be rectangular!");
-		if (game->map.full[i][0] != WALL)
+			ft_error_msg("Invalid Map. The Map must be rectangular!", game);		
+		else if (game->map.full[i][0] != WALL)
 			ft_error_msg("Invalid Map. \
-There's a Wall missing from the first row. \
-The Map must be surrounded by walls!.");
-		if (game->map.full[i][game->map.columns - 1] != WALL)
+There's a Wall missing from the first row.\n\
+The Map must be surrounded by walls!.", game);
+		else if (game->map.full[i][game->map.columns - 1] != WALL)
 			ft_error_msg("Invalid Map. \
-There's a Wall missing from the last row. \
-The Map must be surrounded by walls!.");
+There's a Wall missing from the last row.\n\
+The Map must be surrounded by walls!.", game);
 		i++;
 	}
 }
@@ -271,12 +281,12 @@ void	ft_check_columns(t_game *game)
 	{
 		if (game->map.full[0][i] != WALL)
 			ft_error_msg("Invalid Map. \
-There's a Wall missing from the first column. \
-The Map must be surrounded by walls!.");
-		if (game->map.full[game->map.rows - 1][i] != WALL)
+There's a Wall missing from the first column.\n\
+The Map must be surrounded by walls!.", game);
+		else if (game->map.full[game->map.rows - 1][i] != WALL)
 			ft_error_msg("Invalid Map. \
-There's a Wall missing from the last column. \
-The Map must be surrounded by walls!.");
+There's a Wall missing from the last column.\n\
+The Map must be surrounded by walls!.", game);
 		i++;
 	}
 }
@@ -293,16 +303,16 @@ void	ft_count_map_parameters(t_game *game)
 		while (x < game->map.columns)
 		{
 			if (!ft_strchr("CEP01", game->map.full[y][x]))
-				ft_error_msg("Invalid Map. Not expected map parameter");
-			if (game->map.full[y][x] == PLAYER)
+				ft_error_msg("Invalid Map. Not expected map parameter.", game);
+			else if (game->map.full[y][x] == PLAYER)
 			{
 				game->map.players++;
 				game->map.player.x = x;
 				game->map.player.y = y;
 			}
-			if (game->map.full[y][x] == COINS)
+			else if (game->map.full[y][x] == COINS)
 				game->map.coins++;
-			if (game->map.full[y][x] == MAP_EXIT)
+			else if (game->map.full[y][x] == MAP_EXIT)
 				game->map.exit++;
 			x++;
 		}
@@ -313,31 +323,35 @@ void	ft_count_map_parameters(t_game *game)
 void	ft_verify_map_parameters(t_game *game)
 {
 	if (game->map.coins == 0)
-		ft_error_msg("Invalid Map. There are no Coins!");
-	if (game->map.exit == 0)
-		ft_error_msg("Invalid Map. There is no Exit");
+		ft_error_msg("Invalid Map. There are no Coins!", game);
+	else if (game->map.exit == 0)
+		ft_error_msg("Invalid Map. There is no Exit.", game);
 	else if (game->map.players != 1)
 		ft_error_msg("Invalid Map. Invalid Player quantity. \
-		It's a single player game.");
+It's a single player game.", game);
 }
 
-int	ft_render_map(t_game game)
+void	ft_render_map(t_game *game)
 {
 	int	x;
 	int	y;
 
-	x = 0;
 	y = 0;
-	while (y < game.map.rows)
+	while (y < game->map.rows)
 	{
 		x = 0;
-		while (x < game.map.columns)
+		while (x < game->map.columns)
 		{
-			ft_identify_sprite(&game, game.map.full[y][x], y, x);
+			ft_identify_sprite(game, game->map.full[y][x], y, x);
 			x++;
 		}
 		y++;
 	}
+}
+
+int		ft_redraw_map(t_game game)
+{
+	ft_render_map(&game);
 	return (0);
 }
 
@@ -345,11 +359,11 @@ void	ft_init_mlx(t_game *game)
 {
 	game->mlx_ptr = mlx_init();
 	if (game->mlx_ptr == NULL)
-		ft_error_msg("Couldn't find mlx pointer. Try it using a VNC.");
+		ft_error_msg("Couldn't find mlx pointer. Try it using a VNC.", game);
 	game->win_ptr = mlx_new_window(game->mlx_ptr, \
 	game->map.columns * IMG_WIDTH, game->map.rows * IMG_HEIGHT, "so_long");
 	if (game->win_ptr == NULL)
-		ft_error_msg("Couldn't create the Window.");
+		ft_error_msg("Couldn't create the Window.", game);
 }
 
 void ft_init_sprites(t_game *game)
@@ -376,7 +390,7 @@ t_image	ft_new_sprite(void *mlx, char *path, t_game *game)
 	if (sprite.xpm_ptr == NULL)
 	{
 		ft_free_map(game);
-		ft_error_msg("Couldn't find a sprite. Does it exist?");
+		ft_error_msg("Couldn't find a sprite. Does it exist?", game);
 	}
 	return (sprite);
 }
@@ -385,18 +399,18 @@ void	ft_identify_sprite(t_game *game, char parameter, int y, int x)
 {
 	if (parameter == WALL)
 		ft_render_sprite (game, game->wall, y, x);
-	if (parameter == FLOOR)
+	else if (parameter == FLOOR)
 		ft_render_sprite (game, game->floor, y, x);
-	if (parameter == COINS)
+	else if (parameter == COINS)
 		ft_render_sprite (game, game->coins, y, x);
-	if (parameter == MAP_EXIT)
+	else if (parameter == MAP_EXIT)
 	{
 		if (game->map.coins == 0)
 			ft_render_sprite (game, game->open_exit, y, x);
 		else
 			ft_render_sprite (game, game->exit_closed, y, x);
 	}
-	if (parameter == PLAYER)
+	else if (parameter == PLAYER)
 		ft_render_player (game, y, x);
 }
 
@@ -417,23 +431,21 @@ int	ft_render_open_exit(t_game *game)
 	int	x;
 	int	y;
 
-	x = 0;
 	y = 0;
 	while (y < game->map.rows)
 	{
+		x = 0;
 		while (x < game->map.columns)
 		{
 			if (game->map.full[y][x] == MAP_EXIT)
 				ft_render_sprite (game, game->open_exit, y, x);
 			x++;
 		}
-		x = 0;
 		y++;
 	}
 	ft_print_movements(game);
 	return (0);
 }
-
 
 void	ft_render_sprite(t_game *game, t_image sprite, int line, int column)
 {
@@ -466,7 +478,7 @@ void	ft_player_move(t_game *game, int new_y, int new_x, int player_sprite)
 	last_y = game->map.player.y;
 	if (game->map.full[new_y][new_x] == MAP_EXIT && game->map.coins == 0)
 		ft_victory(game);
-	if ((game->map.full[new_y][new_x] == FLOOR)
+	else if ((game->map.full[new_y][new_x] == FLOOR)
 	|| (game->map.full[new_y][new_x] == COINS))
 	{
 		game->map.full[last_y][last_x] = FLOOR;
@@ -482,11 +494,15 @@ void	ft_player_move(t_game *game, int new_y, int new_x, int player_sprite)
 			if (game->map.coins == 0)
 				ft_render_open_exit(game);
 		}
+		game->map.full[new_y][new_x] = PLAYER;
 	}
 }
 
-int ft_error_msg(char *message)
+int ft_error_msg(char *message, t_game *game)
 {
+	free(game);
+	if (game->map_alloc == true)
+		ft_free_map(game);
 	ft_printf(RED"Error\n"GREY"%s\n"RESET, message);
 	exit (EXIT_FAILURE);
 }
@@ -500,7 +516,17 @@ int	ft_close_game(t_game *game)
 int	ft_victory(t_game *game)
 {
 	ft_free_all_allocated_memory(game);
-	ft_printf(GREEN"\nYOU WON!!!\n"RESET);
+	ft_printf(GREEN"\n\
+██████████████████████████████████████████████████████████████████\n\
+██                                                              ██\n\
+██  ███  ███  ██████  ██    ██     ██      ██ ██ ██    ██   ██  ██\n\
+██   ██  ██  ██    ██ ██    ██     ██      ██ ██ ███   ██   ██  ██\n\
+██    ████   █      █ ██    ██     ██  ██  ██ ██ ██ ██ ██   ██  ██\n\
+██     ██    ██    ██ ██    ██     ██ ████ ██ ██ ██  ████       ██\n\
+██     ██     ██████    ████        ███  ███  ██ ██   ███   ██  ██\n\
+██                                                              ██\n\
+██████████████████████████████████████████████████████████████████\n\
+"RESET);
 	exit (EXIT_FAILURE);
 }
 
