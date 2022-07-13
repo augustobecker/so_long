@@ -155,7 +155,7 @@ int main(int argc, char	**argv)
 	ft_init_mlx(game);
 	ft_init_sprites(game);
 	ft_render_map(*game);
-	mlx_hook(game->win_ptr, KeyRelease, KeyReleaseMask, ft_handle_input, game);
+	mlx_hook(game->win_ptr, KeyPress, KeyPressMask, ft_handle_input, game);
 	mlx_hook(game->win_ptr, DestroyNotify, NoEventMask, exit_click, game);
 	mlx_hook(game->win_ptr, Expose, NoEventMask, ft_render_map, game);
 	mlx_loop(game->mlx_ptr);
