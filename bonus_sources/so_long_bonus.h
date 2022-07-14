@@ -48,16 +48,16 @@
 # define RIGHT				3
 # define BACK				4
 
-# define WALL_XPM			"../assets/sprites/wall.xpm"
-# define FLOOR_XPM			"../assets/sprites/floor.xpm"
-# define COINS_XPM			"../assets/sprites/coin-bag.xpm"
-# define PLAYER_FRONT_XPM		"../assets/sprites/player/front.xpm"
-# define PLAYER_LEFT_XPM		"../assets/sprites/player/left.xpm"
-# define PLAYER_RIGHT_XPM		"../assets/sprites/player/right.xpm"
-# define PLAYER_BACK_XPM		"../assets/sprites/player/back.xpm"
-# define OPEN_EXIT_XPM			"../assets/sprites/open-exit.xpm"
-# define EXIT_CLOSED_XPM		"../assets/sprites/exit-closed.xpm"
-# define TOXIC_RIVER_XPM		"../assets/sprites/toxic.xpm"
+# define WALL_XPM			"assets/sprites/wall.xpm"
+# define FLOOR_XPM			"assets/sprites/floor.xpm"
+# define COINS_XPM			"assets/sprites/coin-bag.xpm"
+# define PLAYER_FRONT_XPM		"assets/sprites/player/front.xpm"
+# define PLAYER_LEFT_XPM		"assets/sprites/player/left.xpm"
+# define PLAYER_RIGHT_XPM		"assets/sprites/player/right.xpm"
+# define PLAYER_BACK_XPM		"assets/sprites/player/back.xpm"
+# define OPEN_EXIT_XPM			"assets/sprites/open-exit.xpm"
+# define EXIT_CLOSED_XPM		"assets/sprites/exit-closed.xpm"
+# define TOXIC_RIVER_XPM		"assets/sprites/toxic.xpm"
 
 # define GREEN				"\033[0;32m"
 # define RED 				"\033[1;31m"
@@ -116,6 +116,7 @@ typedef struct s_game
 
 void	ft_check_command_line_arguments(int argc, char **argv, t_game *game);
 void	ft_init_map(t_game *game, char *argv);
+char	*ft_strappend(char **s1, const char *s2);
 t_bool	ft_check_for_empty_line(char *map);
 void	ft_init_vars(t_game *game);
 void	ft_check_map(t_game *game);
