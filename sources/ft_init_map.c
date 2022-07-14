@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "so_long.h"
+
 void	ft_check_command_line_arguments(int argc, char **argv, t_game *game);
 void	ft_init_map(t_game *game, char *argv);
 t_bool	ft_check_for_empty_line(char *map);
