@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "so_long.h"
+
 void	ft_check_map(t_game *game);
 void	ft_check_rows(t_game *game);
 void	ft_check_columns(t_game *game);
