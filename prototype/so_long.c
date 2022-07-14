@@ -6,7 +6,7 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 17:04:37 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/07/14 03:14:11 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/07/14 03:15:50 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -341,7 +341,7 @@ int	ft_render_map(t_game *game)
 		}
 		y++;
 	}
-	ft_print_movements(game->movements);
+	ft_print_movements(game);
 	return (0);
 }
 
@@ -364,7 +364,6 @@ void ft_init_sprites(t_game *game)
 	void	*mlx;
 
 	mlx = game->mlx_ptr;
-	game->img_alloc = true;
 	game->wall = ft_new_sprite(mlx, WALL_XPM, game);
 	game->floor = ft_new_sprite(mlx, FLOOR_XPM, game);
 	game->coins = ft_new_sprite(mlx, COINS_XPM, game);
