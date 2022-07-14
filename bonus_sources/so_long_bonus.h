@@ -57,7 +57,7 @@
 # define PLAYER_BACK_XPM		"assets/sprites/player/back.xpm"
 # define OPEN_EXIT_XPM			"assets/sprites/open-exit.xpm"
 # define EXIT_CLOSED_XPM		"assets/sprites/exit-closed.xpm"
-# define TOXIC_RIVER_XPM		"assets/sprites/toxic.xpm"
+# define TOXIC_RIVER_XPM		"assets/sprites/toxic-river.xpm"
 
 # define GREEN				"\033[0;32m"
 # define RED 				"\033[1;31m"
