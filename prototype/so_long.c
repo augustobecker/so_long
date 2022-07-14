@@ -131,7 +131,6 @@ int		ft_error_msg(char *message, t_game *game);
 int		ft_close_game(t_game *game);
 void	ft_print_movements(t_game *game);
 int		ft_victory(t_game *game);
-int		exit_click(t_game *game);
 void	ft_free_all_allocated_memory(t_game *game);
 void	ft_destroy_images(t_game *game);
 void	ft_free_string(char **free_str);
