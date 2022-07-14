@@ -6,7 +6,7 @@
 #    By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/28 20:37:12 by acesar-l          #+#    #+#              #
-#    Updated: 2022/07/14 05:28:53 by acesar-l         ###   ########.fr        #
+#    Updated: 2022/07/14 06:09:45 by acesar-l         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,10 +26,11 @@ MINILIBX_FLAGS		= -lmlx -lXext -lX11
 
 REMOVE 			= rm -f
 
-SRCS_DIR		= ./sources
-BONUS_SRCS_DIR		= ./bonus_sources
+SRCS_DIR		= ./sources/
+BONUS_SRCS_DIR		= ./bonus_sources/
 
 SRCS 			= $(addprefix $(SRCS_DIR),\
+			so_long.c		\
 			ft_check_map.c		\
 			ft_close_game.c		\
 			ft_free_memory.c	\
@@ -40,6 +41,7 @@ SRCS 			= $(addprefix $(SRCS_DIR),\
 			ft_utils.c)
 
 SRCS_BONUS 		= $(addprefix $(BONUS_SRCS_DIR),\
+			so_long_bonus.c			\
 			ft_check_map_bonus.c		\
 			ft_close_game_bonus.c		\
 			ft_free_memory_bonus.c		\
@@ -49,11 +51,11 @@ SRCS_BONUS 		= $(addprefix $(BONUS_SRCS_DIR),\
 			ft_render_map_bonus.c		\
 			ft_utils_bonus.c)
 
-all:			${NAME}
+all:			${LIBFT} ${NAME}
 
 ${NAME}: 		
 			${CC} ${SRCS} ${LIBFT} ${STANDARD_FLAGS} ${MINILIBX_FLAGS} -o ${NAME}
-			@echo "\n$(NAME): $(GREEN)$(NAME) was compiled.$(RESET)"
+			@echo "$(NAME): $(GREEN)$(NAME) was compiled.$(RESET)"
 			@echo
 
 bonus:			${NAME_BONUS}
@@ -73,13 +75,14 @@ clean:
 
 fclean:
 			make fclean -C libraries/Libft
+			@echo
 			${REMOVE} ${NAME} ${NAME_BONUS}
+			@echo "${NAME}: ${RED}${NAME} and ${NAME_BONUS} were deleted${RESET}"
 			@echo
 
 re:			fclean all
 
 rebonus:		fclean ${NAME_BONUS}
-
 
 valgrind:
 			@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --quiet --tool=memcheck --keep-debuginfo=yes
@@ -87,6 +90,7 @@ valgrind:
 run:			
 			valgrind ./${NAME} assets/maps/valid/map4.ber
 
-run_bonus:		valgrind ./${NAME_BONUS} assets/maps/valid/bonus/map5.ber
+run_bonus:		
+			valgrind ./${NAME_BONUS} assets/maps/valid/bonus/map5.ber
 
-.PHONY:			all clean fclean re rebonus valgrind run
+.PHONY:			all bonus clean fclean re rebonus valgrind run run_bonus
