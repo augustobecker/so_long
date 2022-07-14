@@ -87,10 +87,10 @@ rebonus:		fclean ${NAME_BONUS}
 valgrind:
 			@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --quiet --tool=memcheck --keep-debuginfo=yes
 
-run:			
+run:			${NAME}
 			valgrind ./${NAME} assets/maps/valid/map4.ber
 
-run_bonus:		
+run_bonus:		${NAME_BONUS}
 			valgrind ./${NAME_BONUS} assets/maps/valid/bonus/map5.ber
 
 .PHONY:			all bonus clean fclean re rebonus valgrind run run_bonus
