@@ -133,7 +133,6 @@ void	ft_print_movements(t_game *game);
 int		ft_victory(t_game *game);
 void	ft_free_all_allocated_memory(t_game *game);
 void	ft_destroy_images(t_game *game);
-void	ft_free_string(char **free_str);
 void	ft_free_map(t_game *game);
 
 char	*ft_strappend(char **s1, const char *s2);
