@@ -6,7 +6,7 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 17:04:37 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/07/14 02:31:33 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/07/14 03:14:11 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ typedef struct s_game
 	int			player_sprite;
 	t_map		map;
 	t_bool		map_alloc;
-	t_bool		img_alloc;
 	t_image		wall;
 	t_image		floor;
 	t_image		coins;
@@ -108,7 +107,6 @@ typedef struct s_game
 	t_image		player_left;
 	t_image		player_right;
 	t_image		player_back;
-	t_image		toxic;
 }	t_game;
 
 void	ft_check_command_line_arguments(int argc, char **argv, t_game *game);
@@ -165,7 +163,6 @@ void	ft_check_command_line_arguments(int argc, char **argv, t_game *game)
 	int	map_parameter_len;
 
 	game->map_alloc = false;
-	game->img_alloc = false;
 	if (argc > 2)
 		ft_error_msg("Too many arguments (It should be only two).", game); 		
 	if (argc < 2)
@@ -344,6 +341,7 @@ int	ft_render_map(t_game *game)
 		}
 		y++;
 	}
+	ft_print_movements(game->movements);
 	return (0);
 }
 
@@ -464,7 +462,6 @@ void	ft_player_move(t_game *game, int new_y, int new_x, int player_sprite)
 		game->map.full[new_y][new_x] = PLAYER;
 		game->movements++;
 		ft_render_map(game);
-		ft_print_movements(game);
 	}
 }
 
@@ -473,13 +470,6 @@ int ft_error_msg(char *message, t_game *game)
 	free(game);
 	if (game->map_alloc == true)
 		ft_free_map(game);
-	if (game->img_alloc == true)
-	{
-		ft_destroy_images(game);
-		mlx_destroy_window(game->mlx_ptr, game->win_ptr);
-		mlx_destroy_display(game->mlx_ptr);
-		free(game->mlx_ptr);
-	}
 	ft_printf(RED"Error\n"GREY"%s\n"RESET, message);
 	exit (EXIT_FAILURE);
 }
