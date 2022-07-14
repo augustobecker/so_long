@@ -112,6 +112,7 @@ typedef struct s_game
 	t_image		player_left;
 	t_image		player_right;
 	t_image		player_back;
+	t_image		toxic;
 }	t_game;
 
 void	ft_check_command_line_arguments(int argc, char **argv, t_game *game);
