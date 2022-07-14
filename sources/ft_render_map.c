@@ -6,16 +6,17 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/14 03:49:13 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/07/14 03:50:13 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/07/14 04:15:14 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
 
-int	ft_render_map(t_game *game);
+int		ft_render_map(t_game *game);
 void	ft_identify_sprite(t_game *game, int x, int y);
 void	ft_render_player(t_game *game, int x, int y);
 void	ft_render_sprite(t_game *game, t_image sprite, int column, int line);
+void	ft_print_movements(t_game *game);
 
 int	ft_render_map(t_game *game)
 {
@@ -75,4 +76,16 @@ void	ft_render_sprite(t_game *game, t_image sprite, int line, int column)
 {
 	mlx_put_image_to_window (game->mlx_ptr, game->win_ptr, \
 	sprite.xpm_ptr, column * sprite.x, line * sprite.y);
+}
+
+void	ft_print_movements(t_game *game)
+{
+	char	*movements;
+	char	*phrase;
+
+	movements = ft_itoa(game->movements);
+	phrase = ft_strjoin("Movements : ", movements);
+	mlx_string_put(game->mlx_ptr, game->win_ptr, 40, 20, 99999, phrase);
+	free(movements);
+	free(phrase);
 }
