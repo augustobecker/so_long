@@ -34,7 +34,7 @@ void	ft_init_map(t_game *game, char *argv)
 {
 	char	*map_temp;
 	char	*line_temp;
-	int		map_fd;
+	int	map_fd;
 
 	map_fd = open(argv, O_RDONLY);
 	if (map_fd == -1)
@@ -50,10 +50,12 @@ void	ft_init_map(t_game *game, char *argv)
 		free(line_temp);
 		game->map.rows++;
 	}
-	game->map_alloc = true;
 	close(map_fd);
 	if (ft_check_for_empty_line(map_temp) == true)
+	{
+		free(map_temp);
 		ft_error_msg("Invalid map. The map have an empty line.", game);
+	}
 	game->map.full = ft_split(map_temp, '\n');
 	free(map_temp);
 }
