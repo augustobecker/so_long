@@ -63,9 +63,9 @@ int	ft_close_game(t_game *game)
 
 int	ft_error_msg(char *message, t_game *game)
 {
-	free(game);
 	if (game->map_alloc == true)
 		ft_free_map(game);
+	free(game);
 	ft_printf(RED"Error\n"GREY"%s\n"RESET, message);
 	exit (EXIT_FAILURE);
 }
