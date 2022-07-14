@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "so_long.h"
+#include "so_long_bonus.h"
 
 void	ft_free_all_allocated_memory(t_game *game);
 void	ft_destroy_images(t_game *game);
