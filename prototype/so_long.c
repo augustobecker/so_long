@@ -6,7 +6,7 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/27 17:04:37 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/07/13 22:28:37 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/07/14 02:31:33 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@
 # define GREEN				"\033[0;32m"
 # define RED 				"\033[1;31m"
 # define GREY 				"\033[0;90m"
+# define CYAN				"\033[1;96m"
 # define RESET 				"\033[0m"
 
 typedef enum e_bool
@@ -97,6 +98,7 @@ typedef struct s_game
 	int			player_sprite;
 	t_map		map;
 	t_bool		map_alloc;
+	t_bool		img_alloc;
 	t_image		wall;
 	t_image		floor;
 	t_image		coins;
@@ -121,22 +123,17 @@ void	ft_verify_map_parameters(t_game *game);
 void	ft_init_mlx(t_game *game);
 void	ft_init_sprites(t_game *game);
 t_image	ft_new_sprite(void *mlx, char *path, t_game *game);
-void	ft_render_map(t_game *game);
-int		ft_redraw_map(t_game game);
-
-void	ft_identify_sprite(t_game *game, char parameter, int x, int y);
+int		ft_render_map(t_game *game);
+void	ft_identify_sprite(t_game *game, int x, int y);
 void	ft_render_player(t_game *game, int x, int y);
 void	ft_render_sprite(t_game *game, t_image sprite, int column, int line);
 int		ft_handle_input(int keysym, t_game *game);
 void	ft_player_move(t_game *game, int x, int y, int player_sprite);
-
 int		ft_error_msg(char *message, t_game *game);
-
 int		ft_close_game(t_game *game);
 void	ft_print_movements(t_game *game);
 int		ft_victory(t_game *game);
 int		exit_click(t_game *game);
-int		ft_handle_no_event(void);
 void	ft_free_all_allocated_memory(t_game *game);
 void	ft_destroy_images(t_game *game);
 void	ft_free_string(char **free_str);
@@ -155,11 +152,10 @@ int main(int argc, char	**argv)
 	ft_check_map(game);
 	ft_init_mlx(game);
 	ft_init_sprites(game);
-	ft_render_map(game); //Leaks ok
+	ft_render_map(game);
 	mlx_hook(game->win_ptr, KeyPress, KeyPressMask, ft_handle_input, game);
-	mlx_hook(game->win_ptr, DestroyNotify, NoEventMask, exit_click, game);
-	mlx_loop_hook(game->mlx_ptr, &ft_handle_no_event, game);
-	mlx_expose_hook(game->win_ptr, &ft_redraw_map, game);
+	mlx_hook(game->win_ptr, DestroyNotify, ButtonPressMask, ft_close_game, game);
+	mlx_hook(game->win_ptr, Expose, ExposureMask, ft_render_map, game);
 	mlx_loop(game->mlx_ptr);
 	ft_free_all_allocated_memory(game);
 }
@@ -169,6 +165,7 @@ void	ft_check_command_line_arguments(int argc, char **argv, t_game *game)
 	int	map_parameter_len;
 
 	game->map_alloc = false;
+	game->img_alloc = false;
 	if (argc > 2)
 		ft_error_msg("Too many arguments (It should be only two).", game); 		
 	if (argc < 2)
@@ -331,7 +328,7 @@ void	ft_verify_map_parameters(t_game *game)
 It's a single player game.", game);
 }
 
-void	ft_render_map(t_game *game)
+int	ft_render_map(t_game *game)
 {
 	int	x;
 	int	y;
@@ -342,16 +339,11 @@ void	ft_render_map(t_game *game)
 		x = 0;
 		while (x < game->map.columns)
 		{
-			ft_identify_sprite(game, game->map.full[y][x], y, x);
+			ft_identify_sprite(game, y, x);
 			x++;
 		}
 		y++;
 	}
-}
-
-int		ft_redraw_map(t_game game)
-{
-	ft_render_map(&game);
 	return (0);
 }
 
@@ -363,7 +355,10 @@ void	ft_init_mlx(t_game *game)
 	game->win_ptr = mlx_new_window(game->mlx_ptr, \
 	game->map.columns * IMG_WIDTH, game->map.rows * IMG_HEIGHT, "so_long");
 	if (game->win_ptr == NULL)
+	{
+		free(game->mlx_ptr);
 		ft_error_msg("Couldn't create the Window.", game);
+	}
 }
 
 void ft_init_sprites(t_game *game)
@@ -371,6 +366,7 @@ void ft_init_sprites(t_game *game)
 	void	*mlx;
 
 	mlx = game->mlx_ptr;
+	game->img_alloc = true;
 	game->wall = ft_new_sprite(mlx, WALL_XPM, game);
 	game->floor = ft_new_sprite(mlx, FLOOR_XPM, game);
 	game->coins = ft_new_sprite(mlx, COINS_XPM, game);
@@ -388,15 +384,15 @@ t_image	ft_new_sprite(void *mlx, char *path, t_game *game)
 
 	sprite.xpm_ptr = mlx_xpm_file_to_image(mlx, path, &sprite.x, &sprite.y);
 	if (sprite.xpm_ptr == NULL)
-	{
-		ft_free_map(game);
 		ft_error_msg("Couldn't find a sprite. Does it exist?", game);
-	}
 	return (sprite);
 }
 
-void	ft_identify_sprite(t_game *game, char parameter, int y, int x)
-{
+void	ft_identify_sprite(t_game *game, int y, int x)
+{	
+	char	parameter;
+	
+	parameter = game->map.full[y][x];
 	if (parameter == WALL)
 		ft_render_sprite (game, game->wall, y, x);
 	else if (parameter == FLOOR)
@@ -424,27 +420,6 @@ void	ft_render_player(t_game *game, int y, int x)
 		ft_render_sprite (game, game->player_right, y, x);
 	if (game->player_sprite == BACK)
 		ft_render_sprite (game, game->player_back, y, x);
-}
-
-int	ft_render_open_exit(t_game *game)
-{
-	int	x;
-	int	y;
-
-	y = 0;
-	while (y < game->map.rows)
-	{
-		x = 0;
-		while (x < game->map.columns)
-		{
-			if (game->map.full[y][x] == MAP_EXIT)
-				ft_render_sprite (game, game->open_exit, y, x);
-			x++;
-		}
-		y++;
-	}
-	ft_print_movements(game);
-	return (0);
 }
 
 void	ft_render_sprite(t_game *game, t_image sprite, int line, int column)
@@ -482,19 +457,14 @@ void	ft_player_move(t_game *game, int new_y, int new_x, int player_sprite)
 	|| (game->map.full[new_y][new_x] == COINS))
 	{
 		game->map.full[last_y][last_x] = FLOOR;
-		ft_render_sprite(game, game->floor, last_y, last_x);
-		ft_render_player(game, new_y, new_x);
-		game->movements++;
-		ft_print_movements(game);
+		if (game->map.full[new_y][new_x] == COINS)
+			game->map.coins--;
 		game->map.player.x = new_x;
 		game->map.player.y = new_y;
-		if (game->map.full[new_y][new_x] == COINS)
-		{
-			game->map.coins--;
-			if (game->map.coins == 0)
-				ft_render_open_exit(game);
-		}
 		game->map.full[new_y][new_x] = PLAYER;
+		game->movements++;
+		ft_render_map(game);
+		ft_print_movements(game);
 	}
 }
 
@@ -503,18 +473,28 @@ int ft_error_msg(char *message, t_game *game)
 	free(game);
 	if (game->map_alloc == true)
 		ft_free_map(game);
+	if (game->img_alloc == true)
+	{
+		ft_destroy_images(game);
+		mlx_destroy_window(game->mlx_ptr, game->win_ptr);
+		mlx_destroy_display(game->mlx_ptr);
+		free(game->mlx_ptr);
+	}
 	ft_printf(RED"Error\n"GREY"%s\n"RESET, message);
 	exit (EXIT_FAILURE);
 }
 
 int	ft_close_game(t_game *game)
 {
-	ft_printf(GREY"%s\n%d"RESET, "CLOSED", game->movements);
+	ft_printf(CYAN"Movements: %d\n"RESET, game->movements);
+	ft_free_all_allocated_memory(game);	
+	ft_printf(GREY"CLOSED\n"RESET);
 	exit (EXIT_FAILURE);
 }
 
 int	ft_victory(t_game *game)
 {
+	ft_printf(CYAN"\n			Movements: %d\n"RESET, ++game->movements);
 	ft_free_all_allocated_memory(game);
 	ft_printf(GREEN"\n\
 ██████████████████████████████████████████████████████████████████\n\
@@ -525,7 +505,7 @@ int	ft_victory(t_game *game)
 ██     ██    ██    ██ ██    ██     ██ ████ ██ ██ ██  ████       ██\n\
 ██     ██     ██████    ████        ███  ███  ██ ██   ███   ██  ██\n\
 ██                                                              ██\n\
-██████████████████████████████████████████████████████████████████\n\
+██████████████████████████████████████████████████████████████████\n\n\
 "RESET);
 	exit (EXIT_FAILURE);
 }
@@ -544,13 +524,6 @@ void	ft_print_movements(t_game *game)
 	mlx_string_put(game->mlx_ptr, game->win_ptr, 40, 20, 99999, phrase);
 	free(movements);
 	free(phrase);
-}
-
-int	exit_click(t_game *game)
-{
-	ft_printf("Movements: %d\n", game->movements);
-	ft_close_game(game);
-	exit(EXIT_FAILURE);
 }
 
 void ft_destroy_images(t_game *game)
@@ -584,11 +557,6 @@ void ft_free_all_allocated_memory(t_game *game)
 	mlx_destroy_display(game->mlx_ptr);
 	free(game->mlx_ptr);
 	free(game);
-}
-
-int	ft_handle_no_event(void)
-{
-	return (0);
 }
 
 char	*ft_strappend(char **s1, const char *s2)
