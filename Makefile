@@ -5,79 +5,87 @@
 #                                                     +:+ +:+         +:+      #
 #    By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/04/01 14:28:59 by acesar-l          #+#    #+#              #
-#    Updated: 2022/06/25 14:58:59 by acesar-l         ###   ########.fr        #
+#    Created: 2021/12/28 20:37:12 by acesar-l          #+#    #+#              #
+#    Updated: 2022/07/14 05:28:53 by acesar-l         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME		= so_long
+NAME			= so_long
+NAME_BONUS		= so_long_bonus
 
-GREEN		= \033[0;32m
-RED		= \033[0;31m
-RESET		= \033[0m
+GREEN			= \033[0;32m
+RED				= \033[0;31m
+RESET			= \033[0m
 
-REMOVE		= rm -rf
+LIBFT 			= ./libraries/Libft/libft.a
 
-CC		= clang
+CC 				= clang
 
-STANDARD_FLAGS	= -Wall -Wextra -Werror
-MINILIBX_FLAGS	= -lmlx -lXext -lX11 -lm 
+STANDARD_FLAGS 	= -Wall -Werror -Wextra
+MINILIBX_FLAGS	= -lmlx -lXext -lX11
 
-LIBFT 		= libraries/Libft/libft.a
-LIBFT_PATH	= libraries/Libft
+REMOVE 			= rm -f
 
-SRC_DIR 	= ./sources
-OBJ_DIR 	= ./objects
+SRCS_DIR		= ./sources
+BONUS_SRCS_DIR	= ./bonus_sources
 
-SOURCES		= 	sources/so_long.c				\
-			sources/check_command_line_arguments.c		\
-			sources/check_for_invalid_map_parameters.c	\
-			sources/check_map.c				\
-			sources/check_map_parameters.c			\
-			sources/error_msg.c				\
-			sources/init_game.c				\
-			sources/init_map.c				\
-			sources/init_vars.c				\
-			sources/set_start_position.c			\
-			sources/strlen_line.c
-BONUS_SOURCES	=
+SRCS 			= $(addprefix $(SRCS_DIR),	\
+				ft_check_map.c			\
+				ft_close_game.c			\
+				ft_free_memory.c		\
+				ft_handle_input.c		\
+				ft_init_game.c			\
+				ft_init_map.c			\
+				ft_render_map.c			\
+				ft_utils.c)
 
-OBJECTS		= $(addprefix $(OBJ_DIR)/, $(SOURCES:.c=.o))
+SRCS_BONUS 		= $(addprefix $(BONUS_SRCS_DIR),\
+				ft_check_map_bonus.c			\
+				ft_close_game_bonus.c			\
+				ft_free_memory_bonus.c			\
+				ft_handle_input_bonus.c			\
+				ft_init_game_bonus.c			\
+				ft_init_map_bonus.c				\
+				ft_render_map_bonus.c			\
+				ft_utils_bonus.c)
 
-BONUS_OBJECTS	= $(addprefix $(BONUS_OBJ_DIR)/, $(BONUS_SOURCES:.c=.o))
+all:			${NAME}
+
+${NAME}: 		
+				${CC} ${SRCS} ${LIBFT} ${STANDARD_FLAGS} ${MINILIBX_FLAGS} -o ${NAME}
+				@echo "\n$(NAME): $(GREEN)$(NAME) was compiled.$(RESET)"
+				@echo
+
+bonus:			${NAME_BONUS}
+
+${NAME_BONUS}:	${CC} ${SRCS_BONUS} ${LIBFT} ${STANDARD_FLAGS} ${MINILIBX_FLAGS} -o ${NAME_BONUS}
+				@echo "\n$(NAME): $(GREEN)$(NAME) was compiled with Bonus.$(RESET)"
+				@echo
 
 ${LIBFT}:
-		make bonus -C ${LIBFT_PATH}
-		@echo
-
-all:		${NAME}
-
-${NAME}:	${LIBFT} $(OBJ_DIR) ${OBJECTS}
-		@echo
-		@echo "$(NAME): $(GREEN)${NAME} was created$(RESET)"
-		${CC} -o ${NAME} ${SOURCES} ${LIBFT} ${STANDARD_FLAGS} ${MINILIBX_FLAGS}
-		@echo
-
-bonus:
-		${LIBFT} $(BONUS_OBJ_DIR) ${BONUS_OBJECTS}
+				@echo
+				make bonus -C libraries/Libft
 
 clean:
-		make clean -C ${LIBFT_PATH}
-		@echo
-		@echo "$(NAME): $(RED)object files were deleted$(RESET)"
-		${REMOVE} ${OBJECTS}
-		@echo
+				make clean -C libraries/Libft
+				@echo
 
-fclean:	
-		make fclean -C ${LIBFT_PATH}
-		@echo "$(NAME): $(RED)object files were deleted$(RESET)"
-		${REMOVE} ${OBJ_DIR}
-		@echo
-		@echo "$(NAME): $(RED)$(NAME) was deleted$(RESET)"
-		${REMOVE} ${NAME}
+fclean:
+				make fclean -C libraries/Libft
+				${REMOVE} ${NAME} ${NAME_BONUS}
+				@echo
 
-re:		fclean all
+re:				fclean all
 
-rebonus:	fclean bonus
+rebonus:		fclean ${NAME_BONUS}
 
-.PHONY:		all bonus clean fclean re rebonus
+
+valgrind:
+				@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --quiet --tool=memcheck --keep-debuginfo=yes
+
+run:			
+				valgrind ./${NAME} assets/maps/valid/map4.ber
+
+run_bonus:		valgrind ./${NAME_BONUS} assets/maps/valid/bonus/map5.ber
+
+.PHONY:			all clean fclean re rebonus valgrind run
