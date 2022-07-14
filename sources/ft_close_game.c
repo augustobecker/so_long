@@ -10,6 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "so_long.h"
+
 int	ft_victory(t_game *game);
 int	ft_close_game(t_game *game);
 int	ft_error_msg(char *message, t_game *game);
