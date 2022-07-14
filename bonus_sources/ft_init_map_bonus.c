@@ -73,11 +73,11 @@ t_bool	ft_check_for_empty_line(char **map)
 		free (*map);
 		return (true);
 	}
-	while (*map[i])
+	while (map[0][i])
 	{
-		if (*map[i - 1] == '\n' && *map[i] == '\n')
+		if (map[0][i - 1] == '\n' && map[0][i] == '\n')
 		{
-			free (*map);
+			free(*map);
 			return (true);
 		}
 		i++;
