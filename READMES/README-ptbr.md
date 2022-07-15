@@ -3,6 +3,8 @@
 <p align="center">:information_source: Um pequeno jogo 2D feito utilizando a Biblioteca Gráfica MiniLibX - Texturas, sprites e tiles incluídos. </p>
 
 <p align="center"><a href="https://www.42sp.org.br/" target="_blank"><img src="https://img.shields.io/static/v1?label=&message=SP&color=000&style=for-the-badge&logo=42""></a></p>
+<p align="center"><a href="https://github.com/augustobecker/so_long" target="_blank"><img align="center" alt="so_long" src="https://user-images.githubusercontent.com/81205527/179134510-48689e9e-f8e4-4165-be40-2e0ec8f5d60d.png"> </a></p>
+<p align="center">123/100 :white_check_mark:</p>
 <p align="center"><a href="https://github.com/augustobecker/SoLong/blob/main/README.md" target="_blank"><img src="https://img.shields.io/badge/available%20in-EN-blue"></a></p>
 <p align="center"><img src="https://user-images.githubusercontent.com/81205527/174392536-21619238-638a-4173-a77c-1b168c6c7898.png"> </p>
 
