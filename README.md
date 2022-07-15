@@ -123,6 +123,8 @@ You can close the game by Clicking on the red cross on the window’s frame, or 
 	
 <h2 align="center" id="how-do-i-test-it"> How do I test it? </h2>  
 
+![image](https://user-images.githubusercontent.com/81205527/179243905-d6422eb4-3a2e-4e5b-a189-22dc6284fd14.png)
+
 <h2 align="center" id="42-cursus"> 42 Cursus </h2>
 	
 42 is a global education initiative that proposes a new way of learning technology: no teachers, no classrooms,
