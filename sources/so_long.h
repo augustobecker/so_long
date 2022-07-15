@@ -115,7 +115,7 @@ typedef struct s_game
 void	ft_check_command_line_arguments(int argc, char **argv, t_game *game);
 void	ft_init_map(t_game *game, char *argv);
 char	*ft_strappend(char **s1, const char *s2);
-t_bool	ft_check_for_empty_line(char **map);
+void	ft_check_for_empty_line(char *map, t_game *game);
 void	ft_init_vars(t_game *game);
 void	ft_check_map(t_game *game);
 void	ft_check_rows(t_game *game);
