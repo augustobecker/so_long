@@ -25,7 +25,8 @@ int main(int argc, char	**argv)
 	ft_init_sprites(game);
 	ft_render_map(game);
 	mlx_hook(game->win_ptr, KeyPress, KeyPressMask, ft_handle_input, game);
-	mlx_hook(game->win_ptr, DestroyNotify, ButtonPressMask, ft_close_game, game);
+	mlx_hook(game->win_ptr, \
+	DestroyNotify, ButtonPressMask, ft_close_game, game);
 	mlx_hook(game->win_ptr, Expose, ExposureMask, ft_render_map, game);
 	mlx_loop(game->mlx_ptr);
 	ft_free_all_allocated_memory(game);
