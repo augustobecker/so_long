@@ -6,7 +6,7 @@
 #    By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/28 20:37:12 by acesar-l          #+#    #+#              #
-#    Updated: 2022/07/14 06:09:45 by acesar-l         ###   ########.fr        #
+#    Updated: 2022/07/14 19:14:16 by acesar-l         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,9 @@ CC 			= clang
 
 STANDARD_FLAGS 		= -Wall -Werror -Wextra
 MINILIBX_FLAGS		= -lmlx -lXext -lX11
+
+VALGRIND		= @valgrind --leak-check=full --show-leak-kinds=all \
+--track-origins=yes --quiet --tool=memcheck --keep-debuginfo=yes
 
 REMOVE 			= rm -f
 
@@ -58,7 +61,7 @@ ${NAME}:
 			@echo "$(NAME): $(GREEN)$(NAME) was compiled.$(RESET)"
 			@echo
 
-bonus:			${NAME_BONUS}
+bonus:			${LIBFT} ${NAME_BONUS}
 
 ${NAME_BONUS}:		
 			${CC} ${SRCS_BONUS} ${LIBFT} ${STANDARD_FLAGS} ${MINILIBX_FLAGS} -o ${NAME_BONUS}
@@ -74,8 +77,6 @@ clean:
 			@echo
 
 fclean:
-			make fclean -C libraries/Libft
-			@echo
 			${REMOVE} ${NAME} ${NAME_BONUS}
 			@echo "${NAME}: ${RED}${NAME} and ${NAME_BONUS} were deleted${RESET}"
 			@echo
@@ -84,13 +85,10 @@ re:			fclean all
 
 rebonus:		fclean ${NAME_BONUS}
 
-valgrind:
-			@valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --quiet --tool=memcheck --keep-debuginfo=yes
-
 run:			${NAME}
-			valgrind ./${NAME} assets/maps/valid/map4.ber
+			${VALGRIND} ./${NAME} assets/maps/valid/map4.ber
 
 run_bonus:		${NAME_BONUS}
-			valgrind ./${NAME_BONUS} assets/maps/valid/bonus/map5.ber
+			${VALGRIND} ./${NAME_BONUS} assets/maps/valid/bonus/map5.ber
 
-.PHONY:			all bonus clean fclean re rebonus valgrind run run_bonus
+.PHONY:			all clean fclean re rebonus valgrind run run_bonus
