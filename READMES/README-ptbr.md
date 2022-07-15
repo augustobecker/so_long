@@ -161,7 +161,7 @@ Entre na pasta do Tester e rode com make:
 
 Se você fez tudo corretamente, deve ver algo como isso:
 
-![image](https://user-images.githubusercontent.com/81205527/160744567-c64eb579-5528-4272-b4a6-579085aaebdf.png)    
+![image](https://user-images.githubusercontent.com/81205527/179243905-d6422eb4-3a2e-4e5b-a189-22dc6284fd14.png)   
     
 <h2 align="center" id="42-cursus"> 42 Cursus </h2>
     
