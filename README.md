@@ -123,6 +123,48 @@ You can close the game by Clicking on the red cross on the window’s frame, or 
 	
 <h2 align="center" id="how-do-i-test-it"> How do I test it? </h2>  
 
+To test the game itself it's recommendable to run it with some different maps and try things like:
+
+Running into a wall and see if you're blocked or if the movements counter increase while you're stucked.
+
+Go to the exit withou collecting all the coins.
+
+Go through the same path at least one time.
+
+Try to move with the arrow keys and with WASD.
+
+Check if the window closes when clicking the red cross on window's frame, same with Esc or Q.
+
+Try to minimize the window and open it again.
+
+Run the project with Valgrind to see if there's any memory leak.
+
+To test some map validations as
+No map, missing argv, multiple argv, invalid extension, map with an empty line, invalid map parameter
+missing W parameter, missing C parameter, missing E parameter, missing P parameter, extra P parameter
+I created my own [Tester](https://github.com/augustobecker/so_long_tester).
+
+To test the code in this repo Clone this repo and cd into it:
+```
+git clone https://github.com/augustobecker/so_long
+
+cd so_long/
+```
+Now, clone the Tester
+
+```
+git clone https://github.com/augustobecker/so_long_tester
+```
+
+Go into the test folder and run with make:
+
+```
+cd so_long_tester
+make
+```
+
+If you did everything correctly you should see something like this
+
 ![image](https://user-images.githubusercontent.com/81205527/179243905-d6422eb4-3a2e-4e5b-a189-22dc6284fd14.png)
 
 <h2 align="center" id="42-cursus"> 42 Cursus </h2>
