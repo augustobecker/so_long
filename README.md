@@ -165,7 +165,7 @@ make
 
 If you did everything correctly you should see something like this
 
-![image](https://user-images.githubusercontent.com/81205527/179243905-d6422eb4-3a2e-4e5b-a189-22dc6284fd14.png)
+![image](https://user-images.githubusercontent.com/81205527/179400332-9e80f631-7d46-464b-a0eb-e481b48ad6b4.png)
 
 <h2 align="center" id="42-cursus"> 42 Cursus </h2>
 	
