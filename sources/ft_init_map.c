@@ -85,4 +85,3 @@ The map have an empty line at the middle.", game);
 		i++;
 	}
 }
-

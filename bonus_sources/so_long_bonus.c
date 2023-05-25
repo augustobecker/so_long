@@ -12,10 +12,10 @@
 
 #include "so_long_bonus.h"
 
-int main(int argc, char	**argv)
+int	main(int argc, char	**argv)
 {
 	t_game	*game;
-	
+
 	game = malloc(sizeof(t_game));
 	ft_check_command_line_arguments(argc, argv, game);
 	ft_init_map(game, argv[1]);
