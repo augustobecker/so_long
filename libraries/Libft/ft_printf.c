@@ -37,8 +37,8 @@ static int	ft_check_arguments(va_list arg, char c)
 int	ft_printf(const char *str, ...)
 {
 	va_list		arg;
-	int		i;
-	int		bytes;
+	int			i;
+	int			bytes;
 	char		c;
 
 	i = 0;

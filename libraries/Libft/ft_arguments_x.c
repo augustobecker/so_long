@@ -15,8 +15,8 @@
 int	ft_arguments_x(unsigned int nbr, char type)
 {
 	char	*num;
-	int	bytes;
-	int	i;
+	int		bytes;
+	int		i;
 
 	i = 0;
 	if (!nbr)
