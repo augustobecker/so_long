@@ -6,7 +6,7 @@
 /*   By: acesar-l <acesar-l@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/14 04:07:53 by acesar-l          #+#    #+#             */
-/*   Updated: 2022/07/14 04:09:33 by acesar-l         ###   ########.fr       */
+/*   Updated: 2022/07/14 06:22:53 by acesar-l         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,10 @@ void	ft_init_mlx(t_game *game)
 {
 	game->mlx_ptr = mlx_init();
 	if (game->mlx_ptr == NULL)
+	{
+		free(game->mlx_ptr);
 		ft_error_msg("Couldn't find mlx pointer. Try it using a VNC.", game);
+	}
 	game->win_ptr = mlx_new_window(game->mlx_ptr, \
 	game->map.columns * IMG_WIDTH, game->map.rows * IMG_HEIGHT, "so_long");
 	if (game->win_ptr == NULL)
