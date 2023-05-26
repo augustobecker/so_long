@@ -33,9 +33,7 @@ void	ft_check_rows(t_game *game)
 	i = 0;
 	while (i < game->map.rows)
 	{
-		if ((int) ft_strlen(game->map.full[i]) != game->map.columns)
-			ft_error_msg("Invalid Map. The Map must be rectangular!", game);
-		else if (game->map.full[i][0] != WALL)
+		if (game->map.full[i][0] != WALL)
 			ft_error_msg("Invalid Map. \
 There's a Wall missing from the first row.\n\
 The Map must be surrounded by walls!.", game);
