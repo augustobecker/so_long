@@ -65,7 +65,7 @@ So, run ./so_long followed by the map:
 
 For bonus:
 	
-	./so_long_bonus assets/maps/valid/map2.ber
+	./so_long_bonus assets/maps/valid/bonus/map5.ber
 	
 <h3 id="maps" align="center"> Maps </h3>   
 You can parse any kind of map, as long as it respects the below rules:
